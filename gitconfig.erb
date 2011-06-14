@@ -1,6 +1,40 @@
 [user]
 	name = <%= print("Your Name: "); STDOUT.flush; STDIN.gets.chomp %>
 	email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
-[github]
-	user = <%= print("GitHub Username: "); STDOUT.flush; STDIN.gets.chomp %>
-	token = <%= print("GitHub API Token: "); STDOUT.flush; STDIN.gets.chomp %>
+#[github]
+#	user = <%#= print("GitHub Username: "); STDOUT.flush; STDIN.gets.chomp %>
+#	token = <%#= print("GitHub API Token: "); STDOUT.flush; STDIN.gets.chomp %>
+
+[alias]
+  st = status -sb
+  df = diff
+  co = checkout
+  ci = commit
+  br = branch
+  lg = log -p
+  lol = log --graph --pretty=oneline --abbrev-commit --decorate
+  lola = log --graph --pretty=oneline --abbrev-commit --decorate --all
+
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+
+[diff]
+  external = $HOME/git/diff-meld.py
+
+[push]
+  default = tracking
+
+[remote.origin]
+  push = HEAD
+
+[branch]
+  autosetupmerge = true
+
+[branch "master"]
+#  mergeoptions = --no-ff
+
+[branch "develop"]
+#  mergeoptions = --no-ff
+
