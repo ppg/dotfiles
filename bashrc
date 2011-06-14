@@ -3,8 +3,9 @@
 # for examples
 
 # If not running interactively, don't do anything
+# Changed for rvm
 #[ -z "$PS1" ] && return
-if ! [ -z "$PS1" ]; then
+if [[ -n "$PS1" ]] ; then
 
   # don't put duplicate lines in the history. See bash(1) for more options
   # ... or force ignoredups and ignorespace
@@ -41,12 +42,12 @@ if ! [ -z "$PS1" ]; then
 
   if [ -n "$force_color_prompt" ]; then
       if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-          # We have color support; assume it's compliant with Ecma-48
-          # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-          # a case would tend to support setf rather than setaf.)
-          color_prompt=yes
+    # We have color support; assume it's compliant with Ecma-48
+    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+    # a case would tend to support setf rather than setaf.)
+    color_prompt=yes
       else
-          color_prompt=
+    color_prompt=
       fi
   fi
 
@@ -103,8 +104,30 @@ if ! [ -z "$PS1" ]; then
       . /etc/bash_completion
   fi
 
-fi # if ! [ -z "$PS1" ]; then
+  # Add in GIT options
+  #. ~/.git-completion.sh
+  # Original ubuntu prompt
+  #PS1=${debian_chroot:+($debian_chroot)}\u@\h:\w\$
+  # Original git-completion.sh prompt
+  #PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ '
+  PS1='\u@\h:\w$(__git_ps1 " (%s)")\$ '
+  GIT_PS1_SHOWDIRTYSTATE=true
+  GIT_PS1_SHOWSTASHSTATE=true
+  #GIT_PS1_SHOWUNTRACKEDFILES=true
+  GIT_PS1_SHOWUPSTREAM="auto"
+  . $HOME/.git/git-flow-completion.sh
+
+  # Add my bin to path
+  export PATH=$PATH:~/bin
+
+  # Export EC2 stuff
+  export EC2_HOME=$HOME/ec2-api-tools-1.3-57419
+  export PATH=$PATH:$EC2_HOME/bin
+  export EC2_PRIVATE_KEY=$HOME/.ec2/pk-$KEY_ID.pem
+  export EC2_CERT=$HOME/.ec2/cert-$KEY_ID.pem
+  export JAVA_HOME=/usr/lib/jvm/java-6-openjdk/
+
+fi # if [[ -n "$PS1" ]]; then
 
 # This is a good place to source rvm v v v
-[[ -s "/home/ppgengler/.rvm/scripts/rvm" ]] && source "/home/ppgengler/.rvm/scripts/rvm"  # This loads RVM into a shell session.
-
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
