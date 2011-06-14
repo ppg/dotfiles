@@ -1,0 +1,30 @@
+def sql(query)
+  ActiveRecord::Base.connection.select_all(query)
+end
+
+def loud_logger
+  set_logger_to Logger.new(STDOUT)
+end
+def quiet_logger
+  set_logger_to Logger.new(File.join(RAILS_ROOT, 'log', "#{RAILS_ENV}.log"))
+end
+def set_logger_to(logger)
+  #RAILS_DEFAULT_LOGGER = logger
+  ActiveRecord::Base.logger = logger
+  ActiveRecord::Base.clear_active_connections!
+end
+
+def sql_off
+  ActiveRecord::ConnectionAdapters::AbstractAdapter.disable_logging = true
+end
+def sql_on
+  ActiveRecord::ConnectionAdapters::AbstractAdapter.disable_logging = false
+end
+
+def switchdb(name)
+  ActiveRecord::Base.establish_connection name
+end
+
+def listdb
+  ActiveRecord::Base.connection.current_database
+end
