@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/home/ppgengler/prevailhs-git/vetsprevail/lib/tasks'
+let g:netrw_dirhist_2='/home/ppgengler/prevailhs-git/vetsprevail/features'
+let g:netrw_dirhist_3='/home/ppgengler/prevailhs-git/vetsprevail/spec'
+let g:netrw_dirhist_4='/home/ppgengler/prevailhs-git/vetsprevail/spec/lib'
+let g:netrw_dirhist_5='/home/ppgengler/prevailhs-git/vetsprevail/app/views/enrollments'
+let g:netrw_dirhist_6='/home/ppgengler/prevailhs-git/vetsprevail/app/views/pages'
