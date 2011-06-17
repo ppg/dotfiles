@@ -1,13 +1,32 @@
+set nocompatible              " reset to known config
+filetype indent plugin on     " Determine indents from file types
+syntax on                     "Enable syntax highlighting
+set confirm                     " Prompt instead of failing commands that require save
+set visualbell                  " Use visual bell instead of beep
+set nostartofline               " Stop certain movements from going to first character (behaves like other editors)
+
+" Search options
+set hlsearch                  " Highlight searches
+nnoremap <C-L> :nohl<CR><C-L> " Turn off search highlighting until next search
+set incsearch " This performs the search on each key press incrementally
 set ignorecase
 set smartcase
-set autoindent "This makes the next line indent the same as the previous one
+
+set backspace=indent,eol,start " Allow backspace over autoindent, line breaks, and start of insert action
+
+" Set the tab spacing and indents
+set autoindent                  " Keep same indent as previous line
 "set smartindent
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+"set tabstop=2                   " Use for hard tabs
+
+set textwidth=78
+set sr fo=acw2roq 
 
 set number " This puts line numbers on the left
 set ruler
-
-set hlsearch " This highlight regular expression searches
-set incsearch " This performs the search on each key press incrementally
 
 set hidden " This allows CTRL-^ to switch buffers even with changes in the current one
 
@@ -17,7 +36,6 @@ set wildmode=list:longest
 
 
 set title
-set visualbell
 set laststatus=2    " Show the status line all the time
 " Useful status information at bottom of screen
 set statusline=[%n]\                                    " Buffer number
@@ -30,21 +48,14 @@ set statusline+=%L/%P                                   " total lines, percentag
 "set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{fugitive#statusline()}%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%=%-16(\ %l,%c-%v\ %)%P
 "set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v][%p%%]\ [LEN=%L]
 
-set tabstop=2
-set shiftwidth=2
-set expandtab
-
-set textwidth=78
-set sr fo=acw2roq 
-
 " This allows CTR-B to turn on/off word wrap in non-comments
 imap <C-B> <C-O>:setl sr! fo<C-R>=strpart("-+",&sr,1)<CR>=t<CR>
 
 let @z='%s/^\(\s\+\)\([^:]\+\):\s*\([^;]\+\);\s*$/\1\2: \3/g'
-
 
 " Syntax highlight actionscript
 au Bufread,BufNewFile *.as set filetype=actionscript
 
 " Map CTRL-r to replace selected text in visual mode
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>
+
