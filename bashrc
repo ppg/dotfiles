@@ -42,12 +42,12 @@ if [[ -n "$PS1" ]] ; then
 
   if [ -n "$force_color_prompt" ]; then
       if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-    # We have color support; assume it's compliant with Ecma-48
-    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-    # a case would tend to support setf rather than setaf.)
-    color_prompt=yes
+          # We have color support; assume it's compliant with Ecma-48
+          # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+          # a case would tend to support setf rather than setaf.)
+          color_prompt=yes
       else
-    color_prompt=
+          color_prompt=
       fi
   fi
 
@@ -104,17 +104,23 @@ if [[ -n "$PS1" ]] ; then
       . /etc/bash_completion
   fi
 
-  # Add in GIT options
-  #. ~/.git-completion.sh
-  # Original ubuntu prompt
-  #PS1=${debian_chroot:+($debian_chroot)}\u@\h:\w\$
-  # Original git-completion.sh prompt
-  #PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ '
-  PS1='\u@\h:\w$(__git_ps1 " (%s)")\$ '
-  GIT_PS1_SHOWDIRTYSTATE=true
-  GIT_PS1_SHOWSTASHSTATE=true
-  #GIT_PS1_SHOWUNTRACKEDFILES=true
+  # Set our prompt to have RVM and GIT information
+  RED="\[\033[0;31m\]"
+  YELLOW="\[\033[0;33m\]"
+  GREEN="\[\033[0;32m\]"
+  BLUE="\[\033[1;34m\]"
+  NO_COLOUR="\[\033[0m\]"
+  #PS1="$BLUE[$GREEN\$(~/.rvm/bin/rvm-prompt),\$(parse_git_branch)$BLUE] \h:\W$NO_COLOUR "
+  #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+  #PS1='\u@\h:\w$(__git_ps1 " (%s)")\$ '
+  PS1="\D{%H:%M:%S} ${debian_chroot:+($debian_chroot)}$GREEN\u@\h$NO_COLOUR:$BLUE\w$NO_COLOUR (\$(~/bin/rvm-prompt))\$(__git_ps1 ' (%s)')\n\$ "
+  GIT_PS1_SHOWDIRTYSTATE=1
+  #GIT_PS1_SHOWUNTRACKEDFILES=1
   GIT_PS1_SHOWUPSTREAM="auto"
+  GIT_PS1_SHOWSTASHSTATE=1
+
+  # Add GIT completion scripts
+  #. ~/.git-completion.sh
   . $HOME/.git/git-flow-completion.sh
 
   # Add my bin to path
