@@ -113,7 +113,17 @@ if [[ -n "$PS1" ]] ; then
   #PS1="$BLUE[$GREEN\$(~/.rvm/bin/rvm-prompt),\$(parse_git_branch)$BLUE] \h:\W$NO_COLOUR "
   #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
   #PS1='\u@\h:\w$(__git_ps1 " (%s)")\$ '
-  PS1="\D{%H:%M:%S} ${debian_chroot:+($debian_chroot)}$GREEN\u@\h$NO_COLOUR:$BLUE\w$NO_COLOUR (\$(~/bin/rvm-prompt))\$(__git_ps1 ' (%s)')\n\$ "
+  PS1_PREFIX="\D{%H:%M:%S} ${debian_chroot:+($debian_chroot)}$GREEN\u@\h$NO_COLOUR:$BLUE\w$NO_COLOUR"
+  if [ -f ~/.rvm/bin/rvm-prompt ]; then
+    PS1_RVM=" (\$(~/.rvm/bin/rvm-prompt))"
+  elif [ -f /usr/local/rvm/bin/rvm-prompt ]; then
+    PS1_RVM=" (\$(/usr/local/rvm/bin/rvm-prompt))"
+  else
+    PS1_RVM=""
+  fi
+  # TODO Check for existence of __git_ps1 function, skip otherwise
+  PS1_GIT="\$(__git_ps1 ' (%s)')"
+  PS1="$PS1_PREFIX$PS1_RVM$PS1_GIT\n\$ "
   GIT_PS1_SHOWDIRTYSTATE=1
   #GIT_PS1_SHOWUNTRACKEDFILES=1
   GIT_PS1_SHOWUPSTREAM="auto"
