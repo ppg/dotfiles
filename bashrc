@@ -78,6 +78,11 @@ if [[ -n "$PS1" ]] ; then
       alias fgrep='fgrep --color=auto'
       alias egrep='egrep --color=auto'
   fi
+  # Add color for OSX
+  export CLICOLOR=1
+  #export LSCOLORS=ExFxCxDxBxegedabagacad
+  #export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+
 
   # some more ls aliases
   alias ll='ls -alF'
@@ -101,7 +106,18 @@ if [[ -n "$PS1" ]] ; then
   # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
   # sources /etc/bash.bashrc).
   if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-      . /etc/bash_completion
+      source /etc/bash_completion
+  fi
+
+  # Include bash completion for OSX with brew
+  if [ -f `brew --prefix`/etc/bash_completion ]; then
+    source `brew --prefix`/etc/bash_completion
+  fi
+
+  # Add GIT completion scripts
+  #. ~/.git-completion.sh
+  if [ -f $HOME/.git/git-flow-completion.sh ]; then
+    source $HOME/.git/git-flow-completion.sh
   fi
 
   # Set our prompt to have RVM and GIT information
@@ -114,6 +130,7 @@ if [[ -n "$PS1" ]] ; then
   #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
   #PS1='\u@\h:\w$(__git_ps1 " (%s)")\$ '
   PS1_PREFIX="\D{%H:%M:%S} ${debian_chroot:+($debian_chroot)}$GREEN\u@\h$NO_COLOUR:$BLUE\w$NO_COLOUR"
+  # If we have rvm prompt the add in that information
   if [ -f ~/.rvm/bin/rvm-prompt ]; then
     PS1_RVM=" (\$(~/.rvm/bin/rvm-prompt))"
   elif [ -f /usr/local/rvm/bin/rvm-prompt ]; then
@@ -123,15 +140,15 @@ if [[ -n "$PS1" ]] ; then
   fi
   # TODO Check for existence of __git_ps1 function, skip otherwise
   PS1_GIT="\$(__git_ps1 ' (%s)')"
+
+  # Combine all the sub-parts
   PS1="$PS1_PREFIX$PS1_RVM$PS1_GIT\n\$ "
+
+  # Configure git status for __git_ps1
   GIT_PS1_SHOWDIRTYSTATE=1
   #GIT_PS1_SHOWUNTRACKEDFILES=1
   GIT_PS1_SHOWUPSTREAM="auto"
   GIT_PS1_SHOWSTASHSTATE=1
-
-  # Add GIT completion scripts
-  #. ~/.git-completion.sh
-  . $HOME/.git/git-flow-completion.sh
 
   # Add my bin to path
   export PATH=$PATH:~/bin

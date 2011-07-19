@@ -25,7 +25,11 @@
 #  safecrlf = false
 
 [diff]
-  external = $HOME/.git/diff-meld.sh
+  # Check for existance of meld before setting it as the diff
+  <% unless `which meld` =~ /^\s*^/ %>
+    # Use meld for diff
+    external = $HOME/.git/diff-meld.sh
+  <% end %>
 
 [push]
   default = tracking
