@@ -110,8 +110,10 @@ if [[ -n "$PS1" ]] ; then
   fi
 
   # Include bash completion for OSX with brew
-  if [ -f `brew --prefix`/etc/bash_completion ]; then
-    source `brew --prefix`/etc/bash_completion
+  if [ -x brew ]; then
+    if [ -f `brew --prefix`/etc/bash_completion ]; then
+      source `brew --prefix`/etc/bash_completion
+    fi
   fi
 
   # Add GIT completion scripts
