@@ -59,3 +59,11 @@ au Bufread,BufNewFile *.as set filetype=actionscript
 " Map CTRL-r to replace selected text in visual mode
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>
 
+"This allows for change paste motion cp{motion}
+" i.e. cpw to change the current word to what's in our buffer
+nmap <silent> cp :set opfunc=ChangePaste<CR>g@
+function! ChangePaste(type, ...)
+  silent exe "normal! `[v`]\"_c"
+  silent exe "normal! p"
+endfunction
+
