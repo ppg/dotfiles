@@ -140,8 +140,12 @@ if [[ -n "$PS1" ]] ; then
   else
     PS1_RVM=""
   fi
-  # TODO Check for existence of __git_ps1 function, skip otherwise
-  PS1_GIT="\$(__git_ps1 ' (%s)')"
+  # If we have __git_ps1 then add in that information
+  if type __git_ps1 >/dev/null 2>&1; then 
+    PS1_GIT="\$(__git_ps1 ' (%s)')"
+  else
+    PS1_GIT=""
+  fi
 
   # Combine all the sub-parts
   PS1="$PS1_PREFIX$PS1_RVM$PS1_GIT\n\$ "
