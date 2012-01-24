@@ -26,7 +26,7 @@
 
 [diff]
   # Check for existance of meld before setting it as the diff
-  <% unless `which meld` =~ /^\s*^/ %>
+  <% unless `which meld` =~ /\A\s*\Z/ %>
     # Use meld for diff
     external = $HOME/.git/diff-meld.sh
   <% end %>
