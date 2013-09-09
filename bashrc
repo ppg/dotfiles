@@ -121,6 +121,12 @@ if [[ -n "$PS1" ]] ; then
   if [ -f $HOME/.git/git-flow-completion.sh ]; then
     source $HOME/.git/git-flow-completion.sh
   fi
+  if [ -f /usr/local/etc/bash_completion.d/git-completion.bash ]; then
+    source /usr/local/etc/bash_completion.d/git-completion.bash
+  fi
+  if [ -f /usr/local/etc/bash_completion.d/git-prompt.sh ]; then
+    source /usr/local/etc/bash_completion.d/git-prompt.sh
+  fi
 
   # Set our prompt to have RVM and GIT information
   RED="\[\033[0;31m\]"
