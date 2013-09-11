@@ -56,6 +56,10 @@ let @z='%s/^\(\s\+\)\([^:]\+\):\s*\([^;]\+\);\s*$/\1\2: \3/g'
 " Syntax highlight actionscript
 au Bufread,BufNewFile *.as set filetype=actionscript
 
+" Hack Vagrantfile and Berksfile as ruby until we have plugins
+au Bufread,BufNewFile Vagrantfile set filetype=ruby
+au Bufread,BufNewFile Berksfile set filetype=ruby
+
 " Map CTRL-r to replace selected text in visual mode
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>
 
