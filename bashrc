@@ -167,7 +167,12 @@ if [[ -n "$PS1" ]] ; then
   # Add my bin to path
   export PATH=$PATH:~/bin
 
-  # Prepend local/bin for rbenv
+  # Configure some Python stuff
+  export PATH=/usr/local/share/python:$PATH
+  export PIP_REQUIRE_VIRTUALENV=true
+  export PIP_DOWNLOAD_CACHE=$HOME/.pip/cache
+
+  # Prepend local/bin for rbenv to override things like git
   export PATH=/usr/local/bin:$PATH
 
   # Export EC2 stuff
