@@ -182,6 +182,9 @@ if [[ -n "$PS1" ]] ; then
   export EC2_CERT=$HOME/.ec2/cert-$KEY_ID.pem
   export JAVA_HOME=/usr/lib/jvm/java-6-openjdk/
 
+  # Add ssh key to ssh agent if not added
+  ssh-add -l &> /dev/null || ssh-add &> /dev/null
+
 fi # if [[ -n "$PS1" ]]; then
 
 # This is a good place to source rvm v v v
