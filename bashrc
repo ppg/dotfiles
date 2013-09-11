@@ -177,7 +177,7 @@ if [[ -n "$PS1" ]] ; then
 
   # Export EC2 stuff
   export EC2_HOME=$HOME/ec2-api-tools-1.3-57419
-  export PATH=$PATH:$EC2_HOME/bin
+  [ -f $EC2_HOME/bin ] && export PATH=$PATH:$EC2_HOME/bin
   export EC2_PRIVATE_KEY=$HOME/.ec2/pk-$KEY_ID.pem
   export EC2_CERT=$HOME/.ec2/cert-$KEY_ID.pem
   export JAVA_HOME=/usr/lib/jvm/java-6-openjdk/
