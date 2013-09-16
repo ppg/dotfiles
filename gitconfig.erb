@@ -25,10 +25,13 @@
 #  safecrlf = false
 
 [diff]
-  # Check for existance of meld before setting it as the diff
-  <% unless `which meld` =~ /\A\s*\Z/ %>
+  <%# # Check for existance of meld before setting it as the diff %>
+  <% if `which meld` !~ /\A\s*\Z/ %>
     # Use meld for diff
     external = $HOME/.git/diff-meld.sh
+  <%# elsif `which opendiff` !~ /\A\s*\Z/ %>
+    # Use opendiff for diff
+    external = $HOME/.git/diff-opendiff.sh
   <% end %>
 
 [push]
