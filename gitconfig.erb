@@ -16,6 +16,9 @@
   lg = log -p
   lol = log --graph --pretty=oneline --abbrev-commit --decorate
   lola = log --graph --pretty=oneline --abbrev-commit --decorate --all
+  <% log_format = '%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' %>
+  loln = log --graph --pretty=format:'<%= log_format %>' --abbrev-commit --decorate
+  lolan = log --graph --pretty=format:'<%= log_format %>' --abbrev-commit --decorate --all
 
 [color]
   diff = auto
