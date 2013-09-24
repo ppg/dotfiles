@@ -138,15 +138,21 @@ if [[ -n "$PS1" ]] ; then
   #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
   #PS1='\u@\h:\w$(__git_ps1 " (%s)")\$ '
   PS1_PREFIX="\D{%H:%M:%S} ${debian_chroot:+($debian_chroot)}$GREEN\u@\h$NO_COLOUR:$BLUE\w$NO_COLOUR"
-  # If we have rvm prompt the add in that information
+  # If we have rvm or rbenv add in that information
   if [ -f ~/.rvm/bin/rvm-prompt ]; then
-    PS1_RUBY=" (\$(~/.rvm/bin/rvm-prompt))"
+    PS1_RUBY=" (ruby:\$(~/.rvm/bin/rvm-prompt))"
   elif [ -f /usr/local/rvm/bin/rvm-prompt ]; then
-    PS1_RUBY=" (\$(/usr/local/rvm/bin/rvm-prompt))"
+    PS1_RUBY=" (ruby:\$(/usr/local/rvm/bin/rvm-prompt))"
   elif [ `which rbenv` ]; then
-    PS1_RUBY=" (\$(rbenv version-name))"
+    PS1_RUBY=" (ruby:\$(rbenv version-name))"
   else
     PS1_RUBY=""
+  fi
+  # If we have pyenv add in that information
+  if [ `which pyenv` ]; then
+    PS1_PYTHON=" (python:\$(pyenv version-name))"
+  else
+    PS1_PYTHON=""
   fi
   # If we have __git_ps1 then add in that information
   if type __git_ps1 >/dev/null 2>&1; then 
@@ -156,7 +162,7 @@ if [[ -n "$PS1" ]] ; then
   fi
 
   # Combine all the sub-parts
-  PS1="$PS1_PREFIX$PS1_RUBY$PS1_GIT\n\$ "
+  PS1="$PS1_PREFIX$PS1_RUBY$PS1_PYTHON$PS1_GIT\n\$ "
 
   # Configure git status for __git_ps1
   GIT_PS1_SHOWDIRTYSTATE=1
