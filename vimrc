@@ -1,3 +1,4 @@
+execute pathogen#infect()
 set nocompatible              " reset to known config
 filetype indent plugin on     " Determine indents from file types
 syntax on                     "Enable syntax highlighting
