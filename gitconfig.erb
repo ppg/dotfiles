@@ -29,7 +29,7 @@
   <% if `which meld` !~ /\A\s*\Z/ %>
     # Use meld for diff
     external = $HOME/.git/diff-meld.sh
-  <%# elsif `which opendiff` !~ /\A\s*\Z/ %>
+  <% elsif false && `which opendiff` !~ /\A\s*\Z/ %>
     # Use opendiff for diff
     external = $HOME/.git/diff-opendiff.sh
   <% end %>
