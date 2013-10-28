@@ -72,3 +72,6 @@ function! ChangePaste(type, ...)
   silent exe "normal! p"
 endfunction
 
+" Adjust vim-markdown settings
+let g:vim_markdown_folding_disabled=1
+
