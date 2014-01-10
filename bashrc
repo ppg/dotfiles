@@ -102,6 +102,9 @@ if [[ -n "$PS1" ]] ; then
       . ~/.bash_aliases
   fi
 
+  # Restore default behavior for Gnome >= 3.8
+  if [ -f /etc/profile.d/vte.sh ]; then . /etc/profile.d/vte.sh; fi
+
   # enable programmable completion features (you don't need to enable
   # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
   # sources /etc/bash.bashrc).
