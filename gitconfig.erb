@@ -1,9 +1,9 @@
 [user]
-	name = <%= print("Your Name: "); STDOUT.flush; STDIN.gets.chomp %>
-	email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
+  name = <%= print("Your Name: "); STDOUT.flush; STDIN.gets.chomp %>
+  email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
 [github]
-	user = <%= print("GitHub Username: "); STDOUT.flush; STDIN.gets.chomp %>
-#	token = <%#= print("GitHub API Token: "); STDOUT.flush; STDIN.gets.chomp %>
+  user = <%= print("GitHub Username: "); STDOUT.flush; STDIN.gets.chomp %>
+#  token = <%#= print("GitHub API Token: "); STDOUT.flush; STDIN.gets.chomp %>
 [credential]
   helper = osxkeychain
 
@@ -29,15 +29,29 @@
 #  autocrlf = true
 #  safecrlf = false
 
+<% meld_path = `which meld` %>
+<% meld_path = nil if meld_path.empty? %>
+<% if meld_path %>
+[difftool.meld]
+  path = <%= meld_path %>
+[mergetool.meld]
+  path = <%= meld_path %>
+<% end %>
+<% opendiff_path = `which opendiff` %>
+<% opendiff_path = nil if opendiff_path.empty? %>
+<% if opendiff_path %>
+[difftool.opendiff]
+  path = <%= opendiff_path %>
+[mergetool.opendiff]
+  path = <%= opendiff_path %>
+<% end %>
+<% tool = meld_path ? 'meld' : opendiff_path ? 'opendiff' : nil %>
 [diff]
-  <%# # Check for existance of meld before setting it as the diff %>
-  <% if `which meld` !~ /\A\s*\Z/ %>
-    # Use meld for diff
-    external = $HOME/.git/diff-meld.sh
-  <% elsif false && `which opendiff` !~ /\A\s*\Z/ %>
-    # Use opendiff for diff
-    external = $HOME/.git/diff-opendiff.sh
-  <% end %>
+  tool = <%= tool %>
+  guitool = <%= tool %>
+[merge]
+  tool = <%= tool %>
+  guitool = <%= tool %>
 
 [sendemail]
   from = Peter P. Gengler <ppgengler@prevailhs.com>
