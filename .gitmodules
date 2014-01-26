@@ -7,3 +7,6 @@
 [submodule "vim/bundle/thor"]
 	path = vim/bundle/thor
 	url = https://github.com/jc00ke/thor.vim
+[submodule "vim/bundle/vim-tags"]
+	path = vim/bundle/vim-tags
+	url = https://github.com/szw/vim-tags.git
