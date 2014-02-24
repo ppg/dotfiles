@@ -128,6 +128,9 @@ if [[ -n "$PS1" ]] ; then
     source /usr/local/etc/bash_completion.d/git-prompt.sh
   fi
 
+  # Add hub completion scripts
+  source ~/.hub.bash_completion.sh
+
   # Set our prompt to have RVM and GIT information
   RED="\[\033[0;31m\]"
   YELLOW="\[\033[0;33m\]"
