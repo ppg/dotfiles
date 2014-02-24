@@ -24,7 +24,7 @@ set expandtab
 "set tabstop=2                   " Use for hard tabs
 
 set textwidth=78
-set sr fo=acw2roq 
+set sr fo=acw2roq
 
 set number " This puts line numbers on the left
 set ruler
@@ -43,7 +43,7 @@ set statusline=[%n]\                                    " Buffer number
 set statusline+=%<%.99f\                                " File name (relative to current path)
 set statusline+=%h%w%m%r%y                              " help, preview, modified, readonly, filetype
 " Add in rvm ruby version
-set statusline+=%{exists('g:loaded_rvm')?rvm#statusline():''}\ 
+set statusline+=%{exists('g:loaded_rvm')?rvm#statusline():''}\
 set statusline+=%=[\%03.3b\:\%02.2B]\ %-16(\ %l,%c\ %)  " byte value, byte value (hex), line number, column number
 set statusline+=%L/%P                                   " total lines, percentage of file
 "set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{fugitive#statusline()}%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%=%-16(\ %l,%c-%v\ %)%P
@@ -75,3 +75,15 @@ endfunction
 " Adjust vim-markdown settings
 let g:vim_markdown_folding_disabled=1
 
+" Highlight trailing whitespace, and remove automatically on save
+" TODO Look for a plugin for this
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
+function! TrimWhiteSpace()
+  %s/\s\+$//e
+endfunction
+autocmd BufWritePre * :call TrimWhiteSpace()
