@@ -61,6 +61,9 @@ au Bufread,BufNewFile *.as set filetype=actionscript
 au Bufread,BufNewFile Vagrantfile set filetype=ruby
 au Bufread,BufNewFile Berksfile set filetype=ruby
 
+" Set *.ino (Arduino) to C
+au Bufread,BufNewFile *.ino set filetype=c
+
 " Map CTRL-r to replace selected text in visual mode
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>
 
