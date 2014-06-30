@@ -185,7 +185,8 @@ if [[ -n "$PS1" ]] ; then
   #export PIP_DOWNLOAD_CACHE=$HOME/.pip/cache
 
   # Prepend local/bin for rbenv to override things like git
-  export PATH=/usr/local/bin:$PATH
+  # and local/sbin for homebrew
+  export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
   # Export EC2 stuff
   export EC2_HOME=$HOME/ec2-api-tools-1.3-57419
