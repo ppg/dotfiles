@@ -83,6 +83,9 @@ let g:go_disable_autoinstall = 1
 " TODO Why doesn't vim-go be opinionated about this?
 au FileType go set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
 
+" Adjust starting fold level
+set foldlevelstart=1 " just show class level, hide methods to start
+
 " Highlight trailing whitespace, and remove automatically on save
 " TODO Look for a plugin for this
 highlight ExtraWhitespace ctermbg=red guibg=red
