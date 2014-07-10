@@ -160,15 +160,21 @@ if [[ -n "$PS1" ]] ; then
   else
     PS1_PYTHON=""
   fi
+  # If we have plenv add in that information
+  if [ `which plenv` ]; then
+    PS1_PERL=" (perl:\$(plenv version-name))"
+  else
+    PS1_PERL=""
+  fi
   # If we have __git_ps1 then add in that information
-  if type __git_ps1 >/dev/null 2>&1; then 
+  if type __git_ps1 >/dev/null 2>&1; then
     PS1_GIT="\$(__git_ps1 ' (%s)')"
   else
     PS1_GIT=""
   fi
 
   # Combine all the sub-parts
-  PS1="$PS1_PREFIX$PS1_RUBY$PS1_PYTHON$PS1_GIT\n\$ "
+  PS1="$PS1_PREFIX$PS1_RUBY$PS1_PYTHON$PS1_PERL$PS1_GIT\n\$ "
 
   # Configure git status for __git_ps1
   GIT_PS1_SHOWDIRTYSTATE=1
@@ -210,4 +216,8 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 # Setup pyenv
 export PYENV_ROOT=/usr/local/var/pyenv
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+
+# Setup plenv
+export PLENV_ROOT=/usr/local/var/plenv
+if which plenv > /dev/null; then eval "$(plenv init -)"; fi
 
