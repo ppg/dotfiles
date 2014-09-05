@@ -1,19 +1,19 @@
 execute pathogen#infect()
-set nocompatible              " reset to known config
-filetype indent plugin on     " Determine indents from file types
-syntax on                     "Enable syntax highlighting
+set nocompatible                " reset to known config
+filetype indent plugin on       " Determine indents from file types
+syntax enable                   " Enable syntax highlighting
 set confirm                     " Prompt instead of failing commands that require save
 set visualbell                  " Use visual bell instead of beep
 set nostartofline               " Stop certain movements from going to first character (behaves like other editors)
 
 " Search options
-set hlsearch                  " Highlight searches
-nnoremap <C-L> :nohl<CR><C-L> " Turn off search highlighting until next search
+set hlsearch                    " Highlight searches
+nnoremap <C-L> :nohl<CR><C-L>   " Turn off search highlighting until next search
 set incsearch " This performs the search on each key press incrementally
 set ignorecase
 set smartcase
 
-set backspace=indent,eol,start " Allow backspace over autoindent, line breaks, and start of insert action
+set backspace=indent,eol,start  " Allow backspace over autoindent, line breaks, and start of insert action
 
 " Set the tab spacing and indents
 set autoindent                  " Keep same indent as previous line
@@ -21,12 +21,12 @@ set autoindent                  " Keep same indent as previous line
 set shiftwidth=2
 set softtabstop=2
 set expandtab
-"set tabstop=2                   " Use for hard tabs
+"set tabstop=2                  " Use for hard tabs
 
 set textwidth=78
 set sr fo=acw2roq
 
-set number " This puts line numbers on the left
+set number                      " This puts line numbers on the left
 set ruler
 
 set hidden " This allows CTRL-^ to switch buffers even with changes in the current one
