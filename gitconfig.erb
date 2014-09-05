@@ -37,6 +37,16 @@
 [mergetool.meld]
   path = <%= meld_path %>
 <% end %>
+
+<% diffmerge_path = `which diffmerge` %>
+<% diffmerge_path = nil if diffmerge_path.empty? %>
+<% if diffmerge_path %>
+[difftool.diffmerge]
+  path = <%= diffmerge_path %>
+[mergetool.diffmerge]
+  path = <%= diffmerge_path %>
+<% end %>
+
 <% opendiff_path = `which opendiff` %>
 <% opendiff_path = nil if opendiff_path.empty? %>
 <% if opendiff_path %>
@@ -45,7 +55,8 @@
 [mergetool.opendiff]
   path = <%= opendiff_path %>
 <% end %>
-<% tool = meld_path ? 'meld' : opendiff_path ? 'opendiff' : nil %>
+
+<% tool = meld_path ? 'meld' : diffmerge_path ? 'diffmerge' : opendiff_path ? 'opendiff' : nil %>
 [diff]
   tool = <%= tool %>
   guitool = <%= tool %>
