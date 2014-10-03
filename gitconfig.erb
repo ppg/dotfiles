@@ -20,6 +20,16 @@
   loln = log --graph --pretty=format:'<%= log_format %>' --abbrev-commit --decorate
   lolan = log --graph --pretty=format:'<%= log_format %>' --abbrev-commit --decorate --all
 
+  # checkout Branch from remote (for when git co <branch_name> won't work
+  # because it matches more than one remote branch)
+  # checkout Branch
+  #   git cobr <remote> <branch_name>
+  cobr = "!f() { git fetch $1 $2 && git checkout -b $2 $1/$2; }; f"
+
+  # checkout PR
+  #   git copr <remote> <pr#>
+  copr = "!f() { git fetch $1 pull/$2/head:pr-$2 && git checkout pr-$2; }; f"
+
 [color]
   diff = auto
   status = auto
