@@ -190,6 +190,10 @@ if [[ -n "$PS1" ]] ; then
   #export PIP_REQUIRE_VIRTUALENV=true
   #export PIP_DOWNLOAD_CACHE=$HOME/.pip/cache
 
+  # Setup Go root
+  export GOPATH=$HOME/.gopath
+  export PATH=$PATH:$GOPATH/bin
+
   # Prepend local/bin for rbenv to override things like git
   # and local/sbin for homebrew
   export PATH=/usr/local/bin:/usr/local/sbin:$PATH
@@ -220,4 +224,3 @@ if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # Setup plenv
 export PLENV_ROOT=/usr/local/var/plenv
 if which plenv > /dev/null; then eval "$(plenv init -)"; fi
-
