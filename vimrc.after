@@ -22,5 +22,6 @@ set statusline+=\ -\ %{exists('g:loaded_rvm')?rvm#statusline():''}
 set statusline+=%=[\%03.3b\:\%02.2B]\ %-16(\ %l,%c\ %)  " byte value, byte value (hex), line number, column number
 set statusline+=%L/%P                                   " total lines, percentage of file
 
-" Setup desired syntax checkers per language
+" SYNTASTIC
 let g:syntastic_ruby_checkers = ['mri', 'rubocop']
+let g:syntastic_always_populate_loc_list = 1
