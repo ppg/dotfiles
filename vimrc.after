@@ -24,6 +24,8 @@ set statusline+=%L/%P                                   " total lines, percentag
 
 " SYNTASTIC
 let g:syntastic_ruby_checkers = ['mri', 'rubocop']
+let g:syntastic_ruby_rubocop_args = '-D'
+let g:syntastic_aggregate_errors = 1
 let g:syntastic_always_populate_loc_list = 1
 
 " Highlight trailing whitespace, and remove automatically on save
