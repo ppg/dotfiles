@@ -224,3 +224,6 @@ if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # Setup plenv
 export PLENV_ROOT=/usr/local/var/plenv
 if which plenv > /dev/null; then eval "$(plenv init -)"; fi
+
+# Setup docker
+if which docker > /dev/null; then eval "$(boot2docker shellinit -)"; fi
