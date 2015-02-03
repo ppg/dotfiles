@@ -214,17 +214,18 @@ fi # if [[ -n "$PS1" ]]; then
 # This is a good place to source rvm v v v
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 
-# Setup rbenv as well
-export RBENV_ROOT=/usr/local/var/rbenv
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+# FIXME: plenv shims configure and messes up nokogiri; disable until its been troublshot
+# Setup plenv
+#export PLENV_ROOT=/usr/local/var/plenv
+#if which plenv > /dev/null; then eval "$(plenv init -)"; fi
 
 # Setup pyenv
 export PYENV_ROOT=/usr/local/var/pyenv
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 
-# Setup plenv
-export PLENV_ROOT=/usr/local/var/plenv
-if which plenv > /dev/null; then eval "$(plenv init -)"; fi
+# Setup rbenv
+export RBENV_ROOT=/usr/local/var/rbenv
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 # Setup docker
 if which docker > /dev/null; then eval "$(boot2docker shellinit -)"; fi
