@@ -192,6 +192,7 @@ if [[ -n "$PS1" ]] ; then
 
   # Setup Go root
   export GOPATH=$HOME/.gopath
+  export GOBIN=$HOME/.gopath/bin
   export PATH=$PATH:$GOPATH/bin
 
   # Prepend local/bin for rbenv to override things like git
