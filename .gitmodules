@@ -1,0 +1,3 @@
+[submodule "janus/tabular"]
+	path = janus/tabular
+	url = git://github.com/godlygeek/tabular.git
