@@ -120,19 +120,9 @@ if [[ -n "$PS1" ]] ; then
   fi
 
   # Add GIT completion scripts
-  #. ~/.git-completion.sh
-  if [ -f $HOME/.git/git-flow-completion.sh ]; then
-    source $HOME/.git/git-flow-completion.sh
-  fi
-  if [ -f /usr/local/etc/bash_completion.d/git-completion.bash ]; then
-    source /usr/local/etc/bash_completion.d/git-completion.bash
-  fi
-  if [ -f /usr/local/etc/bash_completion.d/git-prompt.sh ]; then
-    source /usr/local/etc/bash_completion.d/git-prompt.sh
-  fi
-
-  # Add hub completion scripts
-  source ~/.hub.bash_completion.sh
+  for f in ~/.bash_completion.d/*.bash; do source $f; done
+  for f in ~/.bash_completion.d/*.sh; do source $f; done
+  #[ -f $HOME/.git/git-flow-completion.sh ] && . $HOME/.git/git-flow-completion.sh
 
   # Set our prompt to have RVM and GIT information
   RED="\[\033[0;31m\]"
