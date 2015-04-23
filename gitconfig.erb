@@ -1,9 +1,13 @@
+<% print("Your Full Name: "); STDOUT.flush; @fullname = STDIN.gets.chomp %>
+<% print("Your Email: "); STDOUT.flush; @email = STDIN.gets.chomp %>
+<% print("GitHub Username: "); STDOUT.flush; @github_username = STDIN.gets.chomp %>
+<%# print("GitHub API Token: "); STDOUT.flush; @github_token = STDIN.gets.chomp %>
 [user]
-  name = <%= print("Your Name: "); STDOUT.flush; STDIN.gets.chomp %>
-  email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
+  name = <%= @fullname %>
+  email = <%= @email %>
 [github]
-  user = <%= print("GitHub Username: "); STDOUT.flush; STDIN.gets.chomp %>
-#  token = <%#= print("GitHub API Token: "); STDOUT.flush; STDIN.gets.chomp %>
+  user = <%= @github_username %>
+  #token = <%= @github_token %>
 [credential]
   helper = osxkeychain
 
@@ -76,7 +80,7 @@
   guitool = <%= tool %>
 
 [sendemail]
-  from = Peter P. Gengler <ppgengler@prevailhs.com>
+  from = Peter P. Gengler <<%= @email %>>
   smtpserver = smtp.gmail.com
   smtpuser = ppgengler@gmail.com
   smtpencryption = tls
