@@ -149,19 +149,19 @@ if [[ -n "$PS1" ]] ; then
     PS1_RUBY=" (ruby:\$(~/.rvm/bin/rvm-prompt))"
   elif [ -f /usr/local/rvm/bin/rvm-prompt ]; then
     PS1_RUBY=" (ruby:\$(/usr/local/rvm/bin/rvm-prompt))"
-  elif [ `which rbenv` ]; then
+  elif which rbenv &> /dev/null; then
     PS1_RUBY=" (ruby:\$(rbenv version-name))"
   else
     PS1_RUBY=""
   fi
   # If we have pyenv add in that information
-  if [ `which pyenv` ]; then
+  if which pyenv &> /dev/null; then
     PS1_PYTHON=" (python:\$(pyenv version-name))"
   else
     PS1_PYTHON=""
   fi
   # If we have plenv add in that information
-  if [ `which plenv` ]; then
+  if which plenv &> /dev/null; then
     PS1_PERL=" (perl:\$(plenv version-name))"
   else
     PS1_PERL=""
@@ -182,22 +182,22 @@ if [[ -n "$PS1" ]] ; then
   GIT_PS1_SHOWUPSTREAM="auto"
   GIT_PS1_SHOWSTASHSTATE=1
 
-  # Add my bin to path
-  export PATH=$PATH:~/bin
-
   # Configure some Python stuff
   #export PATH=/usr/local/share/python:$PATH
   #export PIP_REQUIRE_VIRTUALENV=true
   #export PIP_DOWNLOAD_CACHE=$HOME/.pip/cache
 
   # Setup Go root
-  export GOPATH=$HOME/.gopath
-  export GOBIN=$HOME/.gopath/bin
-  export PATH=$PATH:$GOPATH/bin
+  export GOPATH=$HOME/go
+  export GOBIN=$GOPATH/bin
+  export PATH=$PATH:$GOBIN
 
   # Prepend local/bin for rbenv to override things like git
   # and local/sbin for homebrew
   export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+
+  # Add my bin to path
+  export PATH="$HOME/bin:$PATH"
 
   # Export EC2 stuff
   export EC2_HOME=$HOME/ec2-api-tools-1.3-57419
@@ -211,9 +211,6 @@ if [[ -n "$PS1" ]] ; then
 
 fi # if [[ -n "$PS1" ]]; then
 
-# This is a good place to source rvm v v v
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
-
 # FIXME: plenv shims configure and messes up nokogiri; disable until its been troublshot
 # Setup plenv
 #export PLENV_ROOT=/usr/local/var/plenv
@@ -221,11 +218,28 @@ fi # if [[ -n "$PS1" ]]; then
 
 # Setup pyenv
 export PYENV_ROOT=/usr/local/var/pyenv
-if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+if which pyenv &> /dev/null; then eval "$(pyenv init -)"; fi
 
+# Setup nvm
+export NVM_DIR="/home/ppgengler/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+[[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion
+
+
+# Try to setup RVM first
+if [ -s "$HOME/.rvm/scripts/rvm" ]; then
+  source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
+  # TODO: Add in system-wide rvm check next
 # Setup rbenv
-export RBENV_ROOT=/usr/local/var/rbenv
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+elif [ -d "$HOME/.rbenv/bin" ]; then
+  export PATH="$HOME/.rbenv/bin:$PATH"
+  export RBENV_ROOT="$HOME/.rbenv"
+  eval "$(rbenv init -)"
+elif [ -d /usr/local/var/rbenv ]; then
+  export RBENV_ROOT=/usr/local/var/rbenv
+  eval "$(rbenv init -)"
+fi
 
 # Setup docker
-if which docker > /dev/null; then eval "$(boot2docker shellinit -)"; fi
+if which boot2docker &> /dev/null; then eval "$(boot2docker shellinit -)"; fi
+
