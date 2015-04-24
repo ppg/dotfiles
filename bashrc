@@ -124,6 +124,44 @@ if [[ -n "$PS1" ]] ; then
   for f in ~/.bash_completion.d/*.sh; do source $f; done
   #[ -f $HOME/.git/git-flow-completion.sh ] && . $HOME/.git/git-flow-completion.sh
 
+  # Prepend local/bin for rbenv to override things like git
+  # and local/sbin for homebrew
+  export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+
+  # Add my bin to path
+  export PATH="$HOME/bin:$PATH"
+
+  # FIXME: plenv shims configure and messes up nokogiri; disable until its been troublshot
+  # Setup plenv
+  #export PLENV_ROOT=/usr/local/var/plenv
+  #if which plenv > /dev/null; then eval "$(plenv init -)"; fi
+
+  # Setup pyenv
+  export PYENV_ROOT=/usr/local/var/pyenv
+  if which pyenv &> /dev/null; then eval "$(pyenv init -)"; fi
+
+  # Setup nvm
+  export NVM_DIR="/home/ppgengler/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+  [[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion
+
+  # Try to setup RVM first
+  if [ -s "$HOME/.rvm/scripts/rvm" ]; then
+    source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
+    # TODO: Add in system-wide rvm check next
+  # Setup rbenv
+  elif [ -d "$HOME/.rbenv/bin" ]; then
+    export PATH="$HOME/.rbenv/bin:$PATH"
+    export RBENV_ROOT="$HOME/.rbenv"
+    eval "$(rbenv init -)"
+  elif [ -d /usr/local/var/rbenv ]; then
+    export RBENV_ROOT=/usr/local/var/rbenv
+    eval "$(rbenv init -)"
+  fi
+
+  # Setup docker
+  if which boot2docker &> /dev/null; then eval "$(boot2docker shellinit -)"; fi
+
   # Set our prompt to have RVM and GIT information
   RED="\[\033[0;31m\]"
   YELLOW="\[\033[0;33m\]"
@@ -143,6 +181,12 @@ if [[ -n "$PS1" ]] ; then
     PS1_RUBY=" (ruby:\$(rbenv version-name))"
   else
     PS1_RUBY=""
+  fi
+  # If we have nvm add in that information
+  if nvm_ls 'current' &> /dev/null; then
+    PS1_NODE=" (node:\$(nvm_ls 'current'))"
+  else
+    PS1_NODE=""
   fi
   # If we have pyenv add in that information
   if which pyenv &> /dev/null; then
@@ -164,7 +208,7 @@ if [[ -n "$PS1" ]] ; then
   fi
 
   # Combine all the sub-parts
-  PS1="$PS1_PREFIX$PS1_RUBY$PS1_PYTHON$PS1_PERL$PS1_GIT\n\$ "
+  PS1="$PS1_PREFIX$PS1_RUBY$PS1_NODE$PS1_PYTHON$PS1_PERL$PS1_GIT\n\$ "
 
   # Configure git status for __git_ps1
   GIT_PS1_SHOWDIRTYSTATE=1
@@ -182,13 +226,6 @@ if [[ -n "$PS1" ]] ; then
   export GOBIN=$GOPATH/bin
   export PATH=$PATH:$GOBIN
 
-  # Prepend local/bin for rbenv to override things like git
-  # and local/sbin for homebrew
-  export PATH=/usr/local/bin:/usr/local/sbin:$PATH
-
-  # Add my bin to path
-  export PATH="$HOME/bin:$PATH"
-
   # Export EC2 stuff
   export EC2_HOME=$HOME/ec2-api-tools-1.3-57419
   [ -f $EC2_HOME/bin ] && export PATH=$PATH:$EC2_HOME/bin
@@ -200,36 +237,3 @@ if [[ -n "$PS1" ]] ; then
   ssh-add -l &> /dev/null || ssh-add &> /dev/null
 
 fi # if [[ -n "$PS1" ]]; then
-
-# FIXME: plenv shims configure and messes up nokogiri; disable until its been troublshot
-# Setup plenv
-#export PLENV_ROOT=/usr/local/var/plenv
-#if which plenv > /dev/null; then eval "$(plenv init -)"; fi
-
-# Setup pyenv
-export PYENV_ROOT=/usr/local/var/pyenv
-if which pyenv &> /dev/null; then eval "$(pyenv init -)"; fi
-
-# Setup nvm
-export NVM_DIR="/home/ppgengler/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-[[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion
-
-
-# Try to setup RVM first
-if [ -s "$HOME/.rvm/scripts/rvm" ]; then
-  source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
-  # TODO: Add in system-wide rvm check next
-# Setup rbenv
-elif [ -d "$HOME/.rbenv/bin" ]; then
-  export PATH="$HOME/.rbenv/bin:$PATH"
-  export RBENV_ROOT="$HOME/.rbenv"
-  eval "$(rbenv init -)"
-elif [ -d /usr/local/var/rbenv ]; then
-  export RBENV_ROOT=/usr/local/var/rbenv
-  eval "$(rbenv init -)"
-fi
-
-# Setup docker
-if which boot2docker &> /dev/null; then eval "$(boot2docker shellinit -)"; fi
-
