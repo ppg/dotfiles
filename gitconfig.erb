@@ -71,7 +71,7 @@
   path = <%= opendiff_path %>
 <% end %>
 
-<% tool = meld_path ? 'meld' : diffmerge_path ? 'diffmerge' : opendiff_path ? 'opendiff' : nil %>
+<% tool = diffmerge_path ? 'diffmerge' : meld_path ? 'meld' : opendiff_path ? 'opendiff' : nil %>
 [diff]
   tool = <%= tool %>
   guitool = <%= tool %>
