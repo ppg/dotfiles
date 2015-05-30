@@ -1,7 +1,8 @@
 alias ..="cd .."
 
 # Node.js aliases
-alias mocha=./node_modules/mocha/bin/mocha
+alias mocha="./node_modules/mocha/bin/mocha --reporter mocha-better-spec-reporter"
+alias grunt=./node_modules/grunt-cli/bin/grunt
 
 # GREP aliases
 alias grep="grep --color=auto"
