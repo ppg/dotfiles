@@ -222,7 +222,11 @@ if [[ -n "$PS1" ]] ; then
   #export PIP_DOWNLOAD_CACHE=$HOME/.pip/cache
 
   # Setup Go root
-  export GOPATH=$HOME/go
+  if [ -d /jcdata-source/go ]; then
+    export GOPATH=/jcdata-source/go
+  else
+    export GOPATH=$HOME/go
+  fi
   export GOBIN=$GOPATH/bin
   export PATH=$PATH:$GOBIN
 
