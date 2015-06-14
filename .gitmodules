@@ -13,3 +13,6 @@
 [submodule "janus/vim-hashicorp-tools"]
 	path = janus/vim-hashicorp-tools
 	url = https://github.com/markcornick/vim-hashicorp-tools.git
+[submodule "janus/vim-arduino-ino"]
+	path = janus/vim-arduino-ino
+	url = git@github.com:jplaut/vim-arduino-ino.git
