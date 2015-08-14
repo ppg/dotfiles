@@ -4,3 +4,9 @@
 [submodule "janus/vim-jade"]
 	path = janus/vim-jade
 	url = git@github.com:digitaltoad/vim-jade.git
+[submodule "janus/vim-colors-solarized"]
+	path = janus/vim-colors-solarized
+	url = git://github.com/altercation/vim-colors-solarized.git
+[submodule "janus/vim-ansible-yaml"]
+	path = janus/vim-ansible-yaml
+	url = git://github.com/chase/vim-ansible-yaml.git
