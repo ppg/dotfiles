@@ -34,6 +34,9 @@ let g:syntastic_ruby_rubocop_args = '-D'
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_always_populate_loc_list = 1
 
+" Override filetypes
+au BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
+
 " Highlight trailing whitespace, and remove automatically on save
 " TODO Look for a plugin for this
 highlight ExtraWhitespace ctermbg=red guibg=red
