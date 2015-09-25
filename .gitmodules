@@ -10,3 +10,6 @@
 [submodule "janus/vim-ansible-yaml"]
 	path = janus/vim-ansible-yaml
 	url = git://github.com/chase/vim-ansible-yaml.git
+[submodule "janus/vim-hashicorp-tools"]
+	path = janus/vim-hashicorp-tools
+	url = https://github.com/markcornick/vim-hashicorp-tools.git
