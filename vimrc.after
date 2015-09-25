@@ -34,6 +34,10 @@ let g:syntastic_ruby_rubocop_args = '-D'
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_always_populate_loc_list = 1
 
+" Go
+" Enable goimports to automatically insert import paths
+let g:go_fmt_command = "goimports"
+
 " Override filetypes
 au BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
 
