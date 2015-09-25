@@ -119,10 +119,12 @@ if [[ -n "$PS1" ]] ; then
     fi
   fi
 
-  # Add GIT completion scripts
+  # Add completion scripts
   for f in ~/.bash_completion.d/*.bash; do source $f; done
   for f in ~/.bash_completion.d/*.sh; do source $f; done
-  #[ -f $HOME/.git/git-flow-completion.sh ] && . $HOME/.git/git-flow-completion.sh
+
+  # If hub is installed, use over git
+  if which hub &> /dev/null; then eval "$(hub alias -s)"; fi
 
   # Prepend local/bin for rbenv to override things like git
   # and local/sbin for homebrew
@@ -130,6 +132,9 @@ if [[ -n "$PS1" ]] ; then
 
   # Add my bin to path
   export PATH="$HOME/bin:$PATH"
+
+  # If terraform is installed add to path
+  if [ -e /jcdata-source/terraform ]; then export PATH="$PATH:/jcdata-source/terraform"; fi
 
   # FIXME: plenv shims configure and messes up nokogiri; disable until its been troublshot
   # Setup plenv
@@ -221,6 +226,8 @@ if [[ -n "$PS1" ]] ; then
   #export PIP_REQUIRE_VIRTUALENV=true
   #export PIP_DOWNLOAD_CACHE=$HOME/.pip/cache
 
+  # Setup custom Go install if present
+  [ -d /usr/local/go/bin ] && export PATH=$PATH:/usr/local/go/bin
   # Setup Go root
   if [ -d /jcdata-source/go ]; then
     export GOPATH=/jcdata-source/go
@@ -237,7 +244,11 @@ if [[ -n "$PS1" ]] ; then
   export EC2_CERT=$HOME/.ec2/cert-$KEY_ID.pem
   export JAVA_HOME=/usr/lib/jvm/java-6-openjdk/
 
-  # Add ssh key to ssh agent if not added
+  # Setup GCE tools
+  [ -f "$HOME/google-cloud-sdk/path.bash.inc" ] && source "$HOME/google-cloud-sdk/path.bash.inc"
+  [ -f "$HOME/google-cloud-sdk/completion.bash.inc" ] && source "$HOME/google-cloud-sdk/completion.bash.inc"
+
+  # Add ssh keys to ssh agent if not added
   ssh-add -l &> /dev/null || ssh-add &> /dev/null
 
 fi # if [[ -n "$PS1" ]]; then
