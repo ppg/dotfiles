@@ -23,6 +23,10 @@
   <% log_format = '%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' %>
   loln = log --graph --pretty=format:'<%= log_format %>' --abbrev-commit --decorate
   lolan = log --graph --pretty=format:'<%= log_format %>' --abbrev-commit --decorate --all
+  # Omits any commits that came in from a merge, showing only the merge commit
+  lofirst = log --graph --pretty=oneline --abbrev-commit --decorate --first-parent
+  # Shows commits per person in descending order
+  loscore = shortlog -n --summary
 
   # checkout Branch from remote (for when git co <branch_name> won't work
   # because it matches more than one remote branch)
@@ -44,34 +48,33 @@
 #  autocrlf = true
 #  safecrlf = false
 
-<% meld_path = `which meld` %>
-<% meld_path = nil if meld_path.empty? %>
-<% if meld_path %>
+<% diffmerge_path = `which diffmerge`.strip %>
+[difftool.diffmerge]
+  #path = <%= diffmerge_path %>
+  cmd = <%= diffmerge_path %> "$LOCAL" "$REMOTE"
+[mergetool.diffmerge]
+  #path = <%= diffmerge_path %>
+  cmd = <%= diffmerge_path %> --merge --result="$MERGED" "$LOCAL" "$BASE" "$REMOTE"
+  trustExitCode = true
+
+<% meld_path = `which meld`.strip %>
 [difftool.meld]
   path = <%= meld_path %>
 [mergetool.meld]
   path = <%= meld_path %>
-<% end %>
 
-<% diffmerge_path = `which diffmerge` %>
-<% diffmerge_path = nil if diffmerge_path.empty? %>
-<% if diffmerge_path %>
-[difftool.diffmerge]
-  path = <%= diffmerge_path %>
-[mergetool.diffmerge]
-  path = <%= diffmerge_path %>
-<% end %>
-
-<% opendiff_path = `which opendiff` %>
-<% opendiff_path = nil if opendiff_path.empty? %>
-<% if opendiff_path %>
+<% opendiff_path = `which opendiff`.strip %>
 [difftool.opendiff]
   path = <%= opendiff_path %>
 [mergetool.opendiff]
   path = <%= opendiff_path %>
-<% end %>
 
-<% tool = diffmerge_path ? 'diffmerge' : meld_path ? 'meld' : opendiff_path ? 'opendiff' : nil %>
+[difftool]
+  prompt = false
+[mergetool]
+  prompt = false
+
+<% tool = diffmerge_path.empty? ? meld_path.empty? ? 'opendiff' : 'meld' : 'diffmerge' %>
 [diff]
   tool = <%= tool %>
   guitool = <%= tool %>
