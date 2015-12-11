@@ -234,8 +234,8 @@ if [[ -n "$PS1" ]] ; then
   else
     export GOPATH=$HOME/go
   fi
-  export GOBIN=$GOPATH/bin
-  export PATH=$PATH:$GOBIN
+  #export GOBIN=$GOPATH/bin
+  export PATH=$PATH:$GOPATH/bin
   # Enable golang 1.5 vendoring
   export GO15VENDOREXPERIMENT=1
 
