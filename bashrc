@@ -250,6 +250,10 @@ if [[ -n "$PS1" ]] ; then
   [ -f "$HOME/google-cloud-sdk/path.bash.inc" ] && source "$HOME/google-cloud-sdk/path.bash.inc"
   [ -f "$HOME/google-cloud-sdk/completion.bash.inc" ] && source "$HOME/google-cloud-sdk/completion.bash.inc"
 
+  # Setup ROS if present
+  [ -f /opt/ros/jade/setup.bash ] && source /opt/ros/jade/setup.bash
+  [ -f ./devel/setup.bash ] && source ./devel/setup.bash
+
   # Add ssh keys to ssh agent if not added
   ssh-add -l &> /dev/null || ssh-add &> /dev/null
 
