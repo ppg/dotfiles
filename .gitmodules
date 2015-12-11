@@ -16,3 +16,9 @@
 [submodule "janus/vim-arduino-ino"]
 	path = janus/vim-arduino-ino
 	url = git@github.com:jplaut/vim-arduino-ino.git
+[submodule "janus/tagbar"]
+	path = janus/tagbar
+	url = https://github.com/majutsushi/tagbar.git
+[submodule "janus/salt-vim"]
+	path = janus/salt-vim
+	url = git@github.com:saltstack/salt-vim.git
