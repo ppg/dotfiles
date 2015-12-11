@@ -236,6 +236,8 @@ if [[ -n "$PS1" ]] ; then
   fi
   export GOBIN=$GOPATH/bin
   export PATH=$PATH:$GOBIN
+  # Enable golang 1.5 vendoring
+  export GO15VENDOREXPERIMENT=1
 
   # Export EC2 stuff
   export EC2_HOME=$HOME/ec2-api-tools-1.3-57419
