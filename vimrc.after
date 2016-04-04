@@ -37,6 +37,12 @@ let g:syntastic_always_populate_loc_list = 1
 " Go
 " Enable goimports to automatically insert import paths
 let g:go_fmt_command = "goimports"
+let g:syntastic_go_checkers = ['go', 'gofmt', 'golint', 'govet']
+let g:syntastic_go_go_test_args = "-tags 'acceptance'"
+let g:syntastic_go_go_build_args = "-tags 'acceptance'"
+" Potentially enable to make vim saving go faster, but might skip go checking
+" unless forced
+"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 " Override filetypes
 au BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
