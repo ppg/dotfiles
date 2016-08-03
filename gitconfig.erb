@@ -25,6 +25,7 @@
   lolan = log --graph --pretty=format:'<%= log_format %>' --abbrev-commit --decorate --all
   # Omits any commits that came in from a merge, showing only the merge commit
   lofirst = log --graph --pretty=oneline --abbrev-commit --decorate --first-parent
+  lonfirst = log --graph --pretty=format:'<%= log_format %>' --abbrev-commit --decorate --first-parent
   # Shows commits per person in descending order
   loscore = shortlog -n --summary
 
