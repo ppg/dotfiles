@@ -29,10 +29,12 @@ set foldenable          " fold by default
 set foldlevel=3         " start on methods for normal class
 
 " SYNTASTIC
-let g:syntastic_ruby_checkers = ['mri', 'rubocop']
-let g:syntastic_ruby_rubocop_args = '-D'
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_always_populate_loc_list = 1
+
+" Ruby
+let g:syntastic_ruby_checkers = ['mri', 'rubocop']
+let g:syntastic_ruby_rubocop_args = '-D'
 
 " Go
 " Enable goimports to automatically insert import paths
@@ -43,6 +45,13 @@ let g:syntastic_go_go_build_args = "-tags 'acceptance'"
 " Potentially enable to make vim saving go faster, but might skip go checking
 " unless forced
 "let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+
+" JavaScript
+let g:syntastic_javascript_checkers = ['jshint', 'eslint']
+
+" API Blueprint
+" Fix ctrl-b to be back still
+autocmd FileType apiblueprint nnoremap <C-b> <S-Up>
 
 " Override filetypes
 au BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
