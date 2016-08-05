@@ -255,6 +255,9 @@ if [[ -n "$PS1" ]] ; then
   [ -f /opt/ros/jade/setup.bash ] && source /opt/ros/jade/setup.bash
   [ -f ./devel/setup.bash ] && source ./devel/setup.bash
 
+  # Setup travis CLI bash extensions if present
+  [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
+
   # Add ssh keys to ssh agent if not added
   ssh-add -l &> /dev/null || ssh-add &> /dev/null
 
@@ -278,3 +281,4 @@ nvm_switch_if_needed() {
 if [ -s "$NVM_DIR/nvm.sh" ]; then
   cd() { builtin cd "$@"; nvm_switch_if_needed; }
 fi
+
