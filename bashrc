@@ -146,8 +146,12 @@ if [[ -n "$PS1" ]] ; then
   if which pyenv &> /dev/null; then eval "$(pyenv init -)"; fi
 
   # Setup nvm
-  export NVM_DIR="/home/ppgengler/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+  export NVM_DIR=~/.nvm
+  if [ -s "$NVM_DIR/nvm.sh" ]; then # Linux
+    source "$NVM_DIR/nvm.sh"
+  elif which brew &> /dev/null; then # OSX
+    source $(brew --prefix nvm)/nvm.sh
+  fi
   [[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion
 
   # Try to setup RVM first
