@@ -168,9 +168,6 @@ if [[ -n "$PS1" ]] ; then
     eval "$(rbenv init -)"
   fi
 
-  # Setup docker
-  if which boot2docker &> /dev/null; then eval "$(boot2docker shellinit -)"; fi
-
   # Set our prompt to have RVM and GIT information
   RED="\[\033[0;31m\]"
   YELLOW="\[\033[0;33m\]"
