@@ -1,7 +1,7 @@
-<% print("Your Full Name: "); STDOUT.flush; @fullname = STDIN.gets.chomp %>
-<% print("Your Email: "); STDOUT.flush; @email = STDIN.gets.chomp %>
-<% print("GitHub Username: "); STDOUT.flush; @github_username = STDIN.gets.chomp %>
-<%# print("GitHub API Token: "); STDOUT.flush; @github_token = STDIN.gets.chomp %>
+<% print("Your Full Name: "); STDOUT.flush; @fullname = STDIN.gets.chomp -%>
+<% print("Your Email: "); STDOUT.flush; @email = STDIN.gets.chomp -%>
+<% print("GitHub Username: "); STDOUT.flush; @github_username = STDIN.gets.chomp -%>
+<%# print("GitHub API Token: "); STDOUT.flush; @github_token = STDIN.gets.chomp -%>
 [user]
   name = <%= @fullname %>
   email = <%= @email %>
@@ -9,18 +9,27 @@
   user = <%= @github_username %>
   #token = <%= @github_token %>
 [credential]
+<% if "#{`uname`}" == "Darwin" -%>
   helper = osxkeychain
+<% else -%>
+  helper = cache
+<% end -%>
 
 [alias]
   st = status -sb
   df = diff
   co = checkout
   ci = commit
-  br = branch
+<% branch_format = '%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject)' -%>
+<% branch_format_ext = "#{branch_format} - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))" -%>
+  br = for-each-ref refs/heads/ --format='<%= branch_format %>'
+  brs = for-each-ref refs/heads/ --format='<%= branch_format %>' --sort=committerdate
+  brn = for-each-ref refs/heads/ --format='<%= branch_format_ext %>'
+  brsn = for-each-ref refs/heads/ --format='<%= branch_format_ext %>' --sort=committerdate
   lg = log -p
   lol = log --graph --pretty=oneline --abbrev-commit --decorate
   lola = log --graph --pretty=oneline --abbrev-commit --decorate --all
-  <% log_format = '%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' %>
+<% log_format = '%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' -%>
   loln = log --graph --pretty=format:'<%= log_format %>' --abbrev-commit --decorate
   lolan = log --graph --pretty=format:'<%= log_format %>' --abbrev-commit --decorate --all
   # Omits any commits that came in from a merge, showing only the merge commit
@@ -49,7 +58,7 @@
 #  autocrlf = true
 #  safecrlf = false
 
-<% diffmerge_path = `which diffmerge`.strip %>
+<% diffmerge_path = `which diffmerge`.strip -%>
 [difftool.diffmerge]
   #path = <%= diffmerge_path %>
   cmd = <%= diffmerge_path %> "$LOCAL" "$REMOTE"
@@ -58,13 +67,13 @@
   cmd = <%= diffmerge_path %> --merge --result="$MERGED" "$LOCAL" "$BASE" "$REMOTE"
   trustExitCode = true
 
-<% meld_path = `which meld`.strip %>
+<% meld_path = `which meld`.strip -%>
 [difftool.meld]
   path = <%= meld_path %>
 [mergetool.meld]
   path = <%= meld_path %>
 
-<% opendiff_path = `which opendiff`.strip %>
+<% opendiff_path = `which opendiff`.strip -%>
 [difftool.opendiff]
   path = <%= opendiff_path %>
 [mergetool.opendiff]
@@ -75,7 +84,7 @@
 [mergetool]
   prompt = false
 
-<% tool = diffmerge_path.empty? ? meld_path.empty? ? 'opendiff' : 'meld' : 'diffmerge' %>
+<% tool = diffmerge_path.empty? ? meld_path.empty? ? 'opendiff' : 'meld' : 'diffmerge' -%>
 [diff]
   tool = <%= tool %>
   guitool = <%= tool %>
