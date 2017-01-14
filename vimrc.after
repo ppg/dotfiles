@@ -34,7 +34,7 @@ let g:syntastic_always_populate_loc_list = 1
 
 " Ruby
 let g:syntastic_ruby_checkers = ['mri', 'rubocop']
-let g:syntastic_ruby_rubocop_args = '-D'
+let g:syntastic_ruby_rubocop_args = '--display-cop-names --display-style-guide'
 " Stop printing out warnings for <%= some_var_here %>
 let g:syntastic_eruby_ruby_quiet_messages = { 'regex': 'possibly useless use of a variable in void context' }
 
@@ -70,6 +70,9 @@ function! TrimWhiteSpace()
   %s/\s\+$//e
 endfunction
 autocmd BufWritePre * :call TrimWhiteSpace()
+
+" Override *.ino to be Arduino files
+au BufRead,BufNewFile *.ino set filetype=cpp
 
 " Tabularize cucumber after insert
 inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
