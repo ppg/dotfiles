@@ -22,3 +22,6 @@
 [submodule "janus/salt-vim"]
 	path = janus/salt-vim
 	url = git@github.com:saltstack/salt-vim.git
+[submodule "janus/vim-jsbeautify"]
+	path = janus/vim-jsbeautify
+	url = https://github.com/maksimr/vim-jsbeautify.git
