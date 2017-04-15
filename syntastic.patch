@@ -1,0 +1,13 @@
+diff --git a/syntax_checkers/go/govet.vim b/syntax_checkers/go/govet.vim
+index 1d8015c..68537e8 100644
+--- a/syntax_checkers/go/govet.vim
++++ b/syntax_checkers/go/govet.vim
+@@ -20,7 +20,7 @@ set cpo&vim
+ 
+ function! SyntaxCheckers_go_govet_GetLocList() dict
+     let buf = bufnr('')
+-    let makeprg = self.getExecEscaped() . ' vet'
++    let makeprg = self.getExecEscaped() . ' tool vet -all -shadow .'
+ 
+     let errorformat =
+         \ '%Evet: %.%\+: %f:%l:%c: %m,' .
