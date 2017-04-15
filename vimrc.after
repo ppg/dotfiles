@@ -31,6 +31,15 @@ set foldlevel=3         " start on methods for normal class
 " SYNTASTIC
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_mode_map = { 'mode': 'active' } ", 'passive_filetypes': ['go'] }
+" Potentially enable to make vim saving go faster, but might skip go checking
+" unless forced
+"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+" DEBUG
+"let g:syntastic_debug=1
 
 " Ruby
 let g:syntastic_ruby_checkers = ['mri', 'rubocop']
@@ -41,15 +50,18 @@ let g:syntastic_eruby_ruby_quiet_messages = { 'regex': 'possibly useless use of 
 " Go
 " Enable goimports to automatically insert import paths
 let g:go_fmt_command = "goimports"
-let g:syntastic_go_checkers = ['go', 'gofmt', 'golint', 'govet']
-let g:syntastic_go_go_test_args = "-tags 'acceptance integration'"
-let g:syntastic_go_go_build_args = "-tags 'acceptance integration'"
-" Potentially enable to make vim saving go faster, but might skip go checking
-" unless forced
-"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+let g:syntastic_go_checkers = ['go', 'gofmt', 'golint', 'govet', 'errcheck']
+let g:syntastic_go_go_test_args = "-tags 'acceptance benchmark integration'"
+let g:syntastic_go_go_build_args = "-tags 'acceptance benchmark integration'"
 
 " JavaScript
 let g:syntastic_javascript_checkers = ['jshint', 'eslint']
+" TODO(ppg): don't use ctrl-f, use for forward by page
+"autocmd FileType javascript vnoremap <buffer> <c-f> :call RangeJsBeautify()<cr>
+"autocmd FileType json vnoremap <buffer> <c-f> :call RangeJsonBeautify()<cr>
+"autocmd FileType jsx vnoremap <buffer> <c-f> :call RangeJsxBeautify()<cr>
+"autocmd FileType html vnoremap <buffer> <c-f> :call RangeHtmlBeautify()<cr>
+"autocmd FileType css vnoremap <buffer> <c-f> :call RangeCSSBeautify()<cr>
 
 " API Blueprint
 " Fix ctrl-b to be back still
@@ -57,6 +69,7 @@ autocmd FileType apiblueprint nnoremap <C-b> <S-Up>
 
 " Override filetypes
 au BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
+au BufRead,BufNewFile .eslintrc set filetype=json
 
 " Highlight trailing whitespace, and remove automatically on save
 " TODO Look for a plugin for this
@@ -73,6 +86,17 @@ autocmd BufWritePre * :call TrimWhiteSpace()
 
 " Override *.ino to be Arduino files
 au BufRead,BufNewFile *.ino set filetype=cpp
+
+" Define common tabularizations
+if exists(":Tabularize")
+  nmap <Leader>a= :Tabularize /=<CR>
+  vmap <Leader>a= :Tabularize /=<CR>
+  nmap <Leader>a: :Tabularize /:\zs<CR>
+  vmap <Leader>a: :Tabularize /:\zs<CR>
+  nmap <Leader>a, :Tabularize /,\zs<CR>
+  vmap <Leader>a, :Tabularize /,\zs<CR>
+endif
+" TODO Probably put these in after insert too like cucumber?
 
 " Tabularize cucumber after insert
 inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
