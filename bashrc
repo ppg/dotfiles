@@ -155,8 +155,9 @@ if [[ -n "$PS1" ]] ; then
   # and local/sbin for homebrew
   export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
-  # Add my bin to path
-  export PATH="$HOME/bin:$PATH"
+  # Add ~/.local/bin and ~/bin if they exist
+  [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
+  [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
 
   # If terraform is installed add to path
   if [ -e /jcdata-source/terraform ]; then export PATH="$PATH:/jcdata-source/terraform"; fi
@@ -170,7 +171,7 @@ if [[ -n "$PS1" ]] ; then
   export PYENV_ROOT=/usr/local/var/pyenv
   if which pyenv &> /dev/null; then eval "$(pyenv init -)"; fi
 
-  # Setup nvm
+  # Setup nvm and avn
   export NVM_DIR=~/.nvm
   if [ -s "$NVM_DIR/nvm.sh" ]; then # Linux
     source "$NVM_DIR/nvm.sh"
@@ -178,6 +179,7 @@ if [[ -n "$PS1" ]] ; then
     source $(brew --prefix nvm)/nvm.sh
   fi
   [[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion
+  [[ -s "$HOME/.avn/bin/avn.sh" ]] && source "$HOME/.avn/bin/avn.sh" # load avn
 
   # Try to setup RVM first
   if [ -s "$HOME/.rvm/scripts/rvm" ]; then
@@ -287,23 +289,3 @@ if [[ -n "$PS1" ]] ; then
   ssh-add -l &> /dev/null || ssh-add &> /dev/null
 
 fi # if [[ -n "$PS1" ]]; then
-
-nvm_switch_if_needed() {
-  local NVM_RC_VERSION
-  local TARGET_VERSION
-  NVM_RC_VERSION_FILE=$(nvm_find_nvmrc)
-  NVM_RC_VERSION="system"
-  if [ ! -z $NVM_RC_VERSION_FILE ]; then
-  NVM_RC_VERSION=$(cat $NVM_RC_VERSION_FILE)
-  fi
-  TARGET_VERSION=$(nvm_version $NVM_RC_VERSION)
-  CURRENT_VERSION=$(nvm current)
-  #echo "NVM_BIN: $NVM_BIN"
-  #[ "$(nvm_version_path $REAL_VERSION)/bin" == "$NVM_BIN" ] || nvm use $REAL_VERSION &> /dev/null
-  [ "$TARGET_VERSION" == "$CURRENT_VERSION" ] || nvm use $REAL_VERSION &> /dev/null
-}
-
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-  cd() { builtin cd "$@"; nvm_switch_if_needed; }
-fi
-
