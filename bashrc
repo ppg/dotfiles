@@ -7,16 +7,41 @@
 #[ -z "$PS1" ] && return
 if [[ -n "$PS1" ]] ; then
 
-  # don't put duplicate lines in the history. See bash(1) for more options
-  # ... or force ignoredups and ignorespace
-  HISTCONTROL=ignoredups:ignorespace
-
   # append to the history file, don't overwrite it
   shopt -s histappend
 
-  # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-  HISTSIZE=1000
-  HISTFILESIZE=2000
+  # Save multi-line commands as one command
+  shopt -s cmdhist
+
+  # Record each line as it gets issued
+  PROMPT_COMMAND='history -a'
+
+  # Huge history. Doesn't appear to slow things down, so why not?
+  #HISTSIZE=1000
+  #HISTFILESIZE=2000
+  HISTSIZE=500000
+  HISTFILESIZE=100000
+
+  # don't put duplicate lines in the history. See bash(1) for more options
+  # ... or force ignoredups and ignorespace
+  #HISTCONTROL="ignoredups:ignorespace"
+  HISTCONTROL="erasedups:ignoreboth"
+
+  # Don't record some commands
+  export HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
+
+  # Use standard ISO 8601 timestamp
+  # %F equivalent to %Y-%m-%d
+  # %T equivalent to %H:%M:%S (24-hours format)
+  HISTTIMEFORMAT='%F %T '
+
+  # Enable incremental history search with up/down arrows (also Readline goodness)
+  # Learn more about this here: http://codeinthehole.com/writing/the-most-important-command-line-tip-incremental-history-searching-with-inputrc/
+  bind '"\e[A": history-search-backward'
+  bind '"\e[B": history-search-forward'
+  bind '"\e[C": forward-char'
+  bind '"\e[D": backward-char'
+
 
   # check the window size after each command and, if necessary,
   # update the values of LINES and COLUMNS.
