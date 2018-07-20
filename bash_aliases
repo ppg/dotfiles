@@ -6,14 +6,14 @@ alias mocha="./node_modules/mocha/bin/mocha"
 alias grunt=./node_modules/grunt-cli/bin/grunt
 
 # GREP aliases
-alias grep="grep --color=auto"
-alias grip="grep -i --color=auto"
+alias grep="grep --color=auto --exclude-dir=node_modules"
+alias grip="grep -i --color=auto --exclude-dir=node_modules"
 if type rgrep >/dev/null 2>&1; then
-  alias rgrep="rgrep -n --color=auto"
-  alias rgrip="rgrep -ni --color=auto"
+  alias rgrep="rgrep -n --color=auto --exclude-dir=node_modules"
+  alias rgrip="rgrep -ni --color=auto --exclude-dir=node_modules"
 else
-  alias rgrep="grep -nr --color=auto"
-  alias rgrip="grep -nir --color=auto"
+  alias rgrep="grep -nr --color=auto --exclude-dir=node_modules"
+  alias rgrip="grep -nir --color=auto --exclude-dir=node_modules"
 fi
 
 # sudo apt-get install python-pygments python3-pygments
