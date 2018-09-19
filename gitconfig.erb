@@ -55,8 +55,12 @@
 
 [core]
   editor = /usr/bin/vim
+  excludesfile = ~/.gitignore
 #  autocrlf = true
 #  safecrlf = false
+
+[help]
+  autocorrect = 1
 
 <% diffmerge_path = `which diffmerge`.strip -%>
 [difftool.diffmerge]
@@ -88,9 +92,14 @@
 [diff]
   tool = <%= tool %>
   guitool = <%= tool %>
+  wsErrorHighlight = all
 [merge]
   tool = <%= tool %>
   guitool = <%= tool %>
+  wsErrorHighlight = all
+
+[diff "nodiff"]
+  command = /bin/true
 
 [sendemail]
   from = Peter P. Gengler <<%= @email %>>
