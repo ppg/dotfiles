@@ -28,13 +28,23 @@ set foldnestmax=5       " deepest fold levels
 set foldenable          " fold by default
 set foldlevel=3         " start on methods for normal class
 
+" Solarized
+set background=dark
+colorscheme solarized
+" undercurl support
+let &t_Cs = "\e[4:3m"
+let &t_Ce = "\e[4:0m"
+
 " Spell check
 set spelllang=en
 set spellfile=$HOME/.spell/en.utf-8.add
+" TODO(ppg): how to get undercurl to be red?
+highlight SpellBad     gui=undercurl guisp=red term=undercurl cterm=undercurl
 
 " SYNTASTIC
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_jump = 0
 let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
@@ -54,15 +64,19 @@ let g:syntastic_ruby_rubocop_args = '--display-cop-names --display-style-guide'
 let g:syntastic_eruby_ruby_quiet_messages = { 'regex': 'possibly useless use of a variable in void context' }
 
 " Go
+set updatetime=100
+let g:go_auto_type_info = 1 " shows type info at bottom when on something
+let g:go_auto_sameids = 1 " highlights the same variables when cursor is there
 " Enable goimports to automatically insert import paths
 let g:go_fmt_command = "goimports"
+let g:go_fmt_fail_silently = 1 " let syntastic show compile errors instead of opening location list
 let g:syntastic_go_checkers = ['go', 'gofmt', 'golint', 'govet', 'errcheck']
 "let g:syntastic_go_checkers = ['gometalinter']
 let g:syntastic_go_go_test_args = "-tags 'acceptance benchmark integration'"
 let g:syntastic_go_go_build_args = "-tags 'acceptance benchmark integration'"
 " TODO(ppg): why can't I get govet with the makeprgBuild to work?
 "let g:syntastic_go_govet_exe = "go tool vet"
-let g:syntastic_go_govet_args = "-all -shadow -tags 'acceptance benchmark integration'"
+let g:syntastic_go_govet_args = "-all -shadow -tags 'acceptance benchmark integration devci'"
 
 " JavaScript
 "let g:syntastic_javascript_checkers = ['jshint', 'eslint']
@@ -73,6 +87,10 @@ let g:syntastic_javascript_checkers = ['eslint']
 "autocmd FileType jsx vnoremap <buffer> <c-f> :call RangeJsxBeautify()<cr>
 "autocmd FileType html vnoremap <buffer> <c-f> :call RangeHtmlBeautify()<cr>
 "autocmd FileType css vnoremap <buffer> <c-f> :call RangeCSSBeautify()<cr>
+
+"" Shell
+let g:syntastic_sh_shellcheck_args = "--external-sources"
+let g:syntastic_sh_checkers = ['sh', 'shellcheck', 'bashate'] ", 'checkbashisms']
 
 " API Blueprint
 " Fix ctrl-b to be back still
@@ -121,3 +139,9 @@ function! s:align()
     call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
   endif
 endfunction
+
+" vim-spec
+map <Leader>rt :call  RunCurrentSpecFile()<CR>
+map <Leader>rs :call  RunNearestSpec()<CR>
+map <Leader>rl :call  RunLastSpec()<CR>
+map <Leader>ra :call  RunAllSpecs()<CR>
