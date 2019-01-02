@@ -1,0 +1,15 @@
+#!/bin/bash -e
+# leveraged from /usr/share/bash-completion/bash_completion
+
+# Blacklisted completions, causing problems with our code.
+#
+_blacklist_glob='@(acroread.sh)'
+
+# Glob for matching various backup files.
+#
+_backup_glob='@(#*#|*@(~|.@(bak|orig|rej|swp|dpkg*|rpm@(orig|new|save))))'
+
+for i in ~/.bash_completion.d/*; do
+    [[ ${i##*/} != @($_backup_glob|Makefile*|$_blacklist_glob) \
+        && -f $i && -r $i ]] && . "$i"
+done

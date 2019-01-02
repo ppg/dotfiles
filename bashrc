@@ -35,10 +35,6 @@ if [[ -n "$PS1" ]] ; then
   # %T equivalent to %H:%M:%S (24-hours format)
   HISTTIMEFORMAT='%F %T '
 
-  # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-  #HISTSIZE=1000
-  #HISTFILESIZE=2000
-
   # Enable incremental history search with up/down arrows (also Readline goodness)
   # Learn more about this here: http://codeinthehole.com/writing/the-most-important-command-line-tip-incremental-history-searching-with-inputrc/
   bind '"\e[A": history-search-backward'
@@ -126,7 +122,6 @@ if [[ -n "$PS1" ]] ; then
   # You may want to put all your additions into a separate file like
   # ~/.bash_aliases, instead of adding them here directly.
   # See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
   if [ -f ~/.bash_aliases ]; then
       . ~/.bash_aliases
   fi
@@ -134,11 +129,15 @@ if [[ -n "$PS1" ]] ; then
   # Restore default behavior for Gnome >= 3.8
   if [ -f /etc/profile.d/vte.sh ]; then . /etc/profile.d/vte.sh; fi
 
-  # enable programmable completion features (you don't need to enable
-  # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-  # sources /etc/bash.bashrc).
-  if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-      source /etc/bash_completion
+  # NOTE: bash completion must be before things like the git prompt setup
+
+  # enable bash completion in interactive shells
+  if ! shopt -oq posix; then
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+      . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+      . /etc/bash_completion
+    fi
   fi
 
   # Include bash completion for OSX with brew
@@ -277,22 +276,17 @@ if [[ -n "$PS1" ]] ; then
   # Setup GCE tools
   [ -f "$HOME/google-cloud-sdk/path.bash.inc" ] && source "$HOME/google-cloud-sdk/path.bash.inc"
   [ -f "$HOME/google-cloud-sdk/completion.bash.inc" ] && source "$HOME/google-cloud-sdk/completion.bash.inc"
+  if which kubectl > /dev/null; then source <(kubectl completion bash); fi
 
   # Setup ROS if present
   [ -f /opt/ros/jade/setup.bash ] && source /opt/ros/jade/setup.bash
   [ -f ./devel/setup.bash ] && source ./devel/setup.bash
-
-  # Add completion scripts
-  for f in ~/.bash_completion.d/*.bash; do source $f; done
-  for f in ~/.bash_completion.d/*.sh; do source $f; done
-  if which kubectl > /dev/null; then source <(kubectl completion bash); fi
 
   # Setup travis CLI bash extensions if present
   [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
 
   # Add ssh keys to ssh agent if not added
   ssh-add -l &> /dev/null || ssh-add &> /dev/null
-
 fi # if [[ -n "$PS1" ]]; then
 
 # added by travis gem
