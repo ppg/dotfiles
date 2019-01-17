@@ -1,0 +1,49 @@
+#!/bin/bash -e
+
+readonly HOSTS_FILE=/etc/hosts
+readonly HOSTS_AWS_FILE=/etc/hosts.aws
+readonly LEAD='### BEGIN AWS GENERATED HOSTS'
+readonly LEAD_MATCHER="^${LEAD}\$"
+readonly TAIL='### END AWS GENERATED HOSTS'
+readonly TAIL_MATCHER="^${TAIL}\$"
+
+readonly REGIONS=(us-east-1 us-west-2)
+
+# Get all instances
+echo "accumulating instances ..."
+described_instances=''
+for region in "${REGIONS[@]}"; do
+  echo "  ... ${region}"
+  described_instances+=$(aws --output json ec2 describe-instances --region "${region}")
+done
+#echo "described_instances: $described_instances"
+
+private_ips=($(echo "$described_instances" | jq '.Reservations[] .Instances[] .PrivateIpAddress' | tr -d \"))
+hostnames=($(echo "$described_instances" | jq '.Reservations[] .Instances[] .Tags[] | select(.Key == "Name").Value' | tr -d \"))
+#echo "private_ips: ${private_ips[*]}"
+#echo "hostnames: ${hostnames[*]}"
+
+# Generate an AWS hosts file sorted by hostname
+echo "generating ${HOSTS_AWS_FILE} ..."
+true | sudo tee "${HOSTS_AWS_FILE}"
+len=${#hostnames[@]}
+for (( i=0; i<len; i++ )); do
+  printf "%-15s   %s\n" "${private_ips[${i}]}" "${hostnames[${i}]}" | sudo tee --append "${HOSTS_AWS_FILE}" > /dev/null
+  #echo -e "${hostnames[${i}]}\t\t${private_ips[${i}]}" | sudo tee --append "${HOSTS_AWS_FILE}" > /dev/null
+done
+sudo sort --key=2 --output="${HOSTS_AWS_FILE}" "${HOSTS_AWS_FILE}"
+cat <<-EOF | sudo tee "${HOSTS_AWS_FILE}" > /dev/null
+$(echo -e "### Generated at $(date)")
+$(cat "${HOSTS_AWS_FILE}")
+EOF
+
+echo "updating ${HOSTS_FILE} ..."
+# If the hosts file doesn't have our lead/tail then insert them
+if ! grep --extended-regexp "${LEAD_MATCHER}" "${HOSTS_FILE}"; then
+  echo "  ... appending lead and tail"
+  echo -e "\n\n${LEAD}\n${TAIL}" | sudo tee --append "${HOSTS_FILE}" > /dev/null
+fi
+
+echo "  ... updating AWS generated hosts"
+sudo sed --in-place -e "/$LEAD_MATCHER/,/$TAIL_MATCHER/{ /$LEAD_MATCHER/{p; r ${HOSTS_AWS_FILE}
+        }; /$TAIL_MATCHER/p; d }"  ${HOSTS_FILE}
