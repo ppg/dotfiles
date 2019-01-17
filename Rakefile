@@ -1,7 +1,9 @@
 require 'rake'
 require 'erb'
 
-task :default => :install
+NODOT = %w[bin].freeze
+
+task default: :install
 
 desc "install the dot files into user's home directory"
 task :install do
@@ -35,7 +37,7 @@ task :install do
 end
 
 def replace_file(file)
-  system %Q{rm -rf "$HOME/.#{file.sub('.erb', '')}"}
+  system %(rm -rf "$HOME/.#{file.sub('.erb', '')}")
   link_file(file)
 end
 
@@ -46,7 +48,9 @@ def link_file(file)
       new_file.write ERB.new(File.read(file), nil, '-').result(binding)
     end
   else
-    puts "linking ~/.#{file}"
-    system %Q{ln -s "$PWD/#{file}" "$HOME/.#{file}"}
+    # Allow some files to symlink without dots
+    target = NODOT.include?(file) ? file : ".#{file}"
+    puts "linking ~/#{target}"
+    system %(ln -s "$PWD/#{file}" "$HOME/#{target}")
   end
 end
