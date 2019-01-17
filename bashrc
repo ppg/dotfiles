@@ -1,3 +1,5 @@
+#! /bin/bash
+#
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -64,7 +66,6 @@ if [[ -n "$PS1" ]] ; then
   # off by default to not distract the user: the focus in a terminal window
   # should be on the output of commands, not on the prompt
   #force_color_prompt=yes
-
   if [ -n "$force_color_prompt" ]; then
       if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
           # We have color support; assume it's compliant with Ecma-48
@@ -147,19 +148,27 @@ if [[ -n "$PS1" ]] ; then
     fi
   fi
 
-  # If hub is installed, use over git
-  if which hub &> /dev/null; then eval "$(hub alias -s)"; fi
-
   # Prepend local/bin for rbenv to override things like git
   # and local/sbin for homebrew
   export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
   # Add ~/.local/bin and ~/bin if they exist
-  [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
-  [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+  # NOTE: should be done by ubuntu automatically; double check on osx
+  #[ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
+  #[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
 
-  # If terraform is installed add to path
-  if [ -e /jcdata-source/terraform ]; then export PATH="$PATH:/jcdata-source/terraform"; fi
+  # Setup custom Go install if present
+  [ -d /usr/local/go/bin ] && export PATH=$PATH:/usr/local/go/bin
+  # Setup Go root
+  if [ -d /jcdata-source/go ]; then
+    export GOPATH=/jcdata-source/go
+  else
+    export GOPATH=$HOME/go
+  fi
+  #export GOBIN=$GOPATH/bin
+  export PATH=$PATH:$GOPATH/bin
+  # Enable golang 1.5 vendoring
+  export GO15VENDOREXPERIMENT=1
 
   # FIXME: plenv shims configure and messes up nokogiri; disable until its been troublshot
   # Setup plenv
@@ -193,6 +202,9 @@ if [[ -n "$PS1" ]] ; then
     export RBENV_ROOT=/usr/local/var/rbenv
     eval "$(rbenv init -)"
   fi
+
+  # If hub is installed, use over git
+  if which hub &> /dev/null; then eval "$(hub alias -s)"; fi
 
   # Set our prompt to have RVM and GIT information
   RED="\[\033[0;31m\]"
@@ -248,23 +260,8 @@ if [[ -n "$PS1" ]] ; then
   GIT_PS1_SHOWUPSTREAM="auto"
   GIT_PS1_SHOWSTASHSTATE=1
 
-  # Configure some Python stuff
-  #export PATH=/usr/local/share/python:$PATH
-  #export PIP_REQUIRE_VIRTUALENV=true
-  #export PIP_DOWNLOAD_CACHE=$HOME/.pip/cache
-
-  # Setup custom Go install if present
-  [ -d /usr/local/go/bin ] && export PATH=$PATH:/usr/local/go/bin
-  # Setup Go root
-  if [ -d /jcdata-source/go ]; then
-    export GOPATH=/jcdata-source/go
-  else
-    export GOPATH=$HOME/go
-  fi
-  #export GOBIN=$GOPATH/bin
-  export PATH=$PATH:$GOPATH/bin
-  # Enable golang 1.5 vendoring
-  export GO15VENDOREXPERIMENT=1
+  # If terraform is installed add to path
+  if [ -e /jcdata-source/terraform ]; then export PATH="$PATH:/jcdata-source/terraform"; fi
 
   # Export EC2 stuff
   export EC2_HOME=$HOME/ec2-api-tools-1.3-57419
@@ -288,6 +285,3 @@ if [[ -n "$PS1" ]] ; then
   # Add ssh keys to ssh agent if not added
   ssh-add -l &> /dev/null || ssh-add &> /dev/null
 fi # if [[ -n "$PS1" ]]; then
-
-# added by travis gem
-[ -f /home/ppgengler/.travis/travis.sh ] && source /home/ppgengler/.travis/travis.sh
