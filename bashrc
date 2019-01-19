@@ -142,7 +142,7 @@ if [[ -n "$PS1" ]] ; then
   fi
 
   # Include bash completion for OSX with brew
-  if [ -x brew ]; then
+  if which brew &> /dev/null; then
     if [ -f `brew --prefix`/etc/bash_completion ]; then
       source `brew --prefix`/etc/bash_completion
     fi
