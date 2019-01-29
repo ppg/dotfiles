@@ -141,11 +141,21 @@ if [[ -n "$PS1" ]] ; then
     fi
   fi
 
-  # Include bash completion for OSX with brew
-  if which brew &> /dev/null; then
-    if [ -f `brew --prefix`/etc/bash_completion ]; then
-      source `brew --prefix`/etc/bash_completion
+  # https://docs.brew.sh/Shell-Completion
+  if type brew 2&>/dev/null; then
+    for COMPLETION in $(brew --prefix)/etc/bash_completion.d/*
+    do
+      [[ -f $COMPLETION ]] && source "$COMPLETION"
+    done
+    if [[ -f $(brew --prefix)/etc/profile.d/bash_completion.sh ]];
+    then
+      source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
     fi
+    # TODO(ppg); how do do this on OSX in 'normal' way?
+    for COMPLETION in ~/.bash_completion.d/*
+    do
+      [[ -f $COMPLETION ]] && source "$COMPLETION"
+    done
   fi
 
   # Prepend local/bin for rbenv to override things like git
