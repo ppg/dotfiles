@@ -39,7 +39,9 @@ let &t_Ce = "\e[4:0m"
 set spelllang=en
 set spellfile=$HOME/.spell/en.utf-8.add
 " TODO(ppg): how to get undercurl to be red?
-highlight SpellBad     gui=undercurl guisp=red term=undercurl cterm=undercurl
+highlight SpellBad gui=undercurl guisp=red term=undercurl cterm=undercurl
+autocmd FileType markdown setlocal spell
+autocmd FileType text setlocal spell
 
 " SYNTASTIC
 let g:syntastic_aggregate_errors = 1
@@ -95,6 +97,10 @@ let g:syntastic_sh_checkers = ['sh', 'shellcheck', 'bashate'] ", 'checkbashisms'
 " API Blueprint
 " Fix ctrl-b to be back still
 autocmd FileType apiblueprint nnoremap <C-b> <S-Up>
+
+" Markdown
+" Change to autoindent
+au FileType markdown set autoindent
 
 " Override filetypes
 au BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
