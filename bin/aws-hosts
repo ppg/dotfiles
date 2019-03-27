@@ -9,28 +9,24 @@ readonly TAIL_MATCHER="^${TAIL}\$"
 
 readonly REGIONS=(us-east-1 us-west-2)
 
-# Get all instances
+# Clean out working file
+true | sudo tee "${HOSTS_AWS_FILE}"
+
+# Get all instances name and IP
 echo "accumulating instances ..."
-described_instances=''
 for region in "${REGIONS[@]}"; do
   echo "  ... ${region}"
-  described_instances+=$(aws --output json ec2 describe-instances --region "${region}")
+  # shellcheck disable=SC2016
+  aws \
+    --output json ec2 describe-instances \
+    --region "${region}" \
+    --query 'Reservations[*].Instances[*].[Tags[?Key==`Name`].Value[], PrivateIpAddress]' \
+    | jq '.[][] | "\(.[1]) \(.[0][0])"' \
+    | sed 's/^"//' | sed 's/"$//' \
+    | sudo tee --append "${HOSTS_AWS_FILE}" > /dev/null
 done
-#echo "described_instances: $described_instances"
 
-private_ips=($(echo "$described_instances" | jq '.Reservations[] .Instances[] .PrivateIpAddress' | tr -d \"))
-hostnames=($(echo "$described_instances" | jq '.Reservations[] .Instances[] .Tags[] | select(.Key == "Name").Value' | tr -d \"))
-#echo "private_ips: ${private_ips[*]}"
-#echo "hostnames: ${hostnames[*]}"
-
-# Generate an AWS hosts file sorted by hostname
-echo "generating ${HOSTS_AWS_FILE} ..."
-true | sudo tee "${HOSTS_AWS_FILE}"
-len=${#hostnames[@]}
-for (( i=0; i<len; i++ )); do
-  printf "%-15s   %s\n" "${private_ips[${i}]}" "${hostnames[${i}]}" | sudo tee --append "${HOSTS_AWS_FILE}" > /dev/null
-  #echo -e "${hostnames[${i}]}\t\t${private_ips[${i}]}" | sudo tee --append "${HOSTS_AWS_FILE}" > /dev/null
-done
+# Sort the file and make some markers
 sudo sort --key=2 --output="${HOSTS_AWS_FILE}" "${HOSTS_AWS_FILE}"
 cat <<-EOF | sudo tee "${HOSTS_AWS_FILE}" > /dev/null
 $(echo -e "### Generated at $(date)")
