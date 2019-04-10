@@ -40,6 +40,7 @@ set spelllang=en
 set spellfile=$HOME/.spell/en.utf-8.add
 " TODO(ppg): how to get undercurl to be red?
 highlight SpellBad gui=undercurl guisp=red term=undercurl cterm=undercurl
+autocmd FileType gitcommit setlocal spell
 autocmd FileType markdown setlocal spell
 autocmd FileType text setlocal spell
 
@@ -78,7 +79,9 @@ let g:syntastic_go_go_test_args = "-tags 'benchmark functional integration'"
 let g:syntastic_go_go_build_args = "-tags 'benchmark functional integration'"
 " TODO(ppg): why can't I get govet with the makeprgBuild to work?
 "let g:syntastic_go_govet_exe = "go tool vet"
-let g:syntastic_go_govet_args = "-all -shadow -tags 'benchmark functional integration devci'"
+" < go1.12
+"let g:syntastic_go_govet_args = "-all -shadow -tags 'benchmark functional integration devci'"
+let g:syntastic_go_govet_args = "-vettool=$(which shadow) -tags 'benchmark functional integration devci'"
 
 " JavaScript
 "let g:syntastic_javascript_checkers = ['jshint', 'eslint']
@@ -89,6 +92,11 @@ let g:syntastic_javascript_checkers = ['eslint']
 "autocmd FileType jsx vnoremap <buffer> <c-f> :call RangeJsxBeautify()<cr>
 "autocmd FileType html vnoremap <buffer> <c-f> :call RangeHtmlBeautify()<cr>
 "autocmd FileType css vnoremap <buffer> <c-f> :call RangeCSSBeautify()<cr>
+
+" Python
+let g:syntastic_python_python_exec = 'python3'
+let g:syntastic_python_flake8_exec = 'python3'
+let g:syntastic_python_flake8_args = ['-m', 'flake8']
 
 "" Shell
 let g:syntastic_sh_shellcheck_args = "--external-sources"
