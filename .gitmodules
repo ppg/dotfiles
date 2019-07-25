@@ -25,3 +25,6 @@
 [submodule "janus/vim-jsbeautify"]
 	path = janus/vim-jsbeautify
 	url = https://github.com/maksimr/vim-jsbeautify.git
+[submodule "janus/vim-go"]
+	path = janus/vim-go
+	url = https://github.com/fatih/vim-go.git
