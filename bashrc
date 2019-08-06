@@ -30,7 +30,7 @@ if [[ -n "$PS1" ]] ; then
   HISTCONTROL="erasedups:ignoreboth"
 
   # Don't record some commands
-  export HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
+  HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
 
   # Use standard ISO 8601 timestamp
   # %F equivalent to %Y-%m-%d
@@ -181,8 +181,8 @@ if [[ -n "$PS1" ]] ; then
   fi
   #export GOBIN=$GOPATH/bin
   export PATH=$PATH:$GOPATH/bin
-  # Enable golang 1.5 vendoring
-  export GO15VENDOREXPERIMENT=1
+  # Turn on go modules
+  export GO111MODULE=on
 
   # FIXME: plenv shims configure and messes up nokogiri; disable until its been troublshot
   # Setup plenv
