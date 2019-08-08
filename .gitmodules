@@ -28,3 +28,9 @@
 [submodule "janus/vim-go"]
 	path = janus/vim-go
 	url = https://github.com/fatih/vim-go.git
+[submodule "janus/black"]
+	path = janus/black
+	url = https://github.com/psf/black.git
+[submodule "janus/vim-isort"]
+	path = janus/vim-isort
+	url = https://github.com/fisadev/vim-isort.git
