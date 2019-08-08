@@ -110,7 +110,9 @@ let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_python_python_exec = 'python3'
 let g:syntastic_python_flake8_exec = 'python3'
 let g:syntastic_python_flake8_args = ['-m', 'flake8']
-au FileType python setlocal textwidth=120
+autocmd BufRead,BufNewFile *.py set textwidth=88
+autocmd BufWritePre *.py execute ':Black'
+autocmd BufWritePre *.py execute ':Isort'
 
 "" Shell
 let g:syntastic_sh_shellcheck_args = "--external-sources"
@@ -121,7 +123,7 @@ let g:syntastic_sh_checkers = ['sh', 'shellcheck', 'bashate'] ", 'checkbashisms'
 autocmd FileType apiblueprint nnoremap <C-b> <S-Up>
 
 " Gherkin
-au FileType cucumber setlocal textwidth=120
+au FileType cucumber setlocal textwidth=88
 
 " Markdown
 " Change to autoindent
