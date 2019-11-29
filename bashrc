@@ -168,8 +168,8 @@ if [[ -n "$PS1" ]] ; then
 
   # Add ~/.local/bin and ~/bin if they exist
   # NOTE: should be done by ubuntu automatically; double check on osx
-  #[ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
-  #[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+  [[ -d "${HOME}/.local/bin" ]] && [[ "${PATH}" != *"${HOME}/.local/bin" ]] && PATH="${HOME}/.local/bin:${PATH}"
+  [[ -d "${HOME}/bin" ]] && [[ "${PATH}" != *"${HOME}/bin" ]] && PATH="${HOME}/bin:${PATH}"
 
   # Setup custom Go install if present
   [ -d /usr/local/go/bin ] && export PATH=$PATH:/usr/local/go/bin
