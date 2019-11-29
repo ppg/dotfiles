@@ -156,6 +156,10 @@ if [[ -n "$PS1" ]] ; then
     do
       [[ -f $COMPLETION ]] && source "$COMPLETION"
     done
+    for COMPLETION in ~/.bash_completion.d/darwin/*
+    do
+      [[ -f $COMPLETION ]] && source "$COMPLETION"
+    done
   fi
 
   # Prepend local/bin for rbenv to override things like git
