@@ -252,6 +252,13 @@ if [[ -n "$PS1" ]] ; then
   else
     PS1_PYTHON=""
   fi
+  # virtualenv and virtualenvwrapper
+  if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
+    export WORKON_HOME=$HOME/.virtualenvs
+    export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
+    source /usr/local/bin/virtualenvwrapper.sh
+  fi
+
   # If we have plenv add in that information
   if which plenv &> /dev/null; then
     PS1_PERL=" (perl:\$(plenv version-name))"
