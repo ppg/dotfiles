@@ -35,14 +35,14 @@ task :install do
     # Continute unless we're symlinking this file
     next unless SYMLINK_WHITELIST.key?(file)
 
-    target = SYMLINK_WHITELIST[file]
+    target = SYMLINK_WHITELIST[file] || ".#{file}"
 
     # If we have a template suffix then we'll generate the file instead of
     # symlink
     case File.extname(file).downcase
     when '.erb'
-      # Get target or default to . file without template extension
-      target ||= File.join(ENV['HOME'], ".#{File.basename(file, '.*')}")
+      # Get target without template extension
+      target = File.join(ENV['HOME'], File.basename(target, '.*'))
 
       # If the file doesn't exist write it
       if !File.exist?(target) || replace_all
@@ -64,8 +64,8 @@ task :install do
       end
 
     else # no interplation, symlink
-      # Get the target or default to . file
-      target ||= File.join(ENV['HOME'], ".#{file}")
+      # Get the target in home directory
+      target = File.join(ENV['HOME'], target)
       link_file(target, file)
     end
   end
@@ -79,5 +79,5 @@ end
 
 def link_file(target, file)
   puts "linking #{target} to #{file}"
-  system %(ln -sf "$PWD/#{file}" "#{target}")
+  system %(ln -fhs "$PWD/#{file}" "#{target}")
 end
