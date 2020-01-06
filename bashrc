@@ -197,7 +197,7 @@ if [[ -n "$PS1" ]] ; then
   export NVM_DIR=~/.nvm
   if [ -s "$NVM_DIR/nvm.sh" ]; then # Linux
     source "$NVM_DIR/nvm.sh"
-  elif which brew &> /dev/null; then # OSX
+  elif which brew &> /dev/null && brew ls --versions nvm &> /dev/null; then # OSX
     source $(brew --prefix nvm)/nvm.sh
   fi
   [[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion
@@ -208,12 +208,7 @@ if [[ -n "$PS1" ]] ; then
     source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
     # TODO: Add in system-wide rvm check next
   # Setup rbenv
-  elif [ -d "$HOME/.rbenv/bin" ]; then
-    export PATH="$HOME/.rbenv/bin:$PATH"
-    export RBENV_ROOT="$HOME/.rbenv"
-    eval "$(rbenv init -)"
-  elif [ -d /usr/local/var/rbenv ]; then
-    export RBENV_ROOT=/usr/local/var/rbenv
+  elif which rbenv &> /dev/null; then
     eval "$(rbenv init -)"
   fi
 
