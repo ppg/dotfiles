@@ -115,5 +115,9 @@ end
 
 def link_file(target, file)
   puts "  linking #{target} to #{file}"
-  system %(ln -fhs "$PWD/#{file}" "#{target}")
+  if RbConfig::CONFIG['host_os'].start_with?('darwin')
+    system %(ln -fhs "$PWD/#{file}" "#{target}")
+  else
+    system %(ln --force --no-target-directory --symbolic "$PWD/#{file}" "#{target}")
+  end
 end
