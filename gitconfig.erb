@@ -16,17 +16,25 @@
 <% end -%>
 
 [alias]
-  st = status -sb
-  df = diff
-  co = checkout
+  # Top level shortcuts
   ci = commit
+  co = checkout
+  df = diff
+  lg = log -p
+  sm = submodule
+  st = status -sb
+
+  # branch advanced helpers
+  branch-edit = branch --edit-description
+  branch-desc = !git config branch.${1:-`git symbolic-ref --short HEAD`}.description && :
   <%- branch_format = '%(HEAD) %(color:red)%(align:9)%(objectname:short)%(upstream:trackshort)%(end)%(color:reset) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject)' -%>
   <%- branch_format_ext = "#{branch_format} - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))" -%>
   br = for-each-ref refs/heads/ --format='<%= branch_format %>'
   brs = for-each-ref refs/heads/ --format='<%= branch_format %>' --sort=committerdate
   brn = for-each-ref refs/heads/ --format='<%= branch_format_ext %>'
   brsn = for-each-ref refs/heads/ --format='<%= branch_format_ext %>' --sort=committerdate
-  lg = log -p
+
+  # log advanced helpers
   lol = log --graph --pretty=oneline --abbrev-commit --decorate
   lola = log --graph --pretty=oneline --abbrev-commit --decorate --all
   <%- log_format = '%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' -%>
@@ -48,10 +56,13 @@
   #   git copr <remote> <pr#>
   copr = "!f() { git fetch $1 pull/$2/head:pr-$2 && git checkout pr-$2; }; f"
 
-  # Pull latest submodules
-  smpull = "submodule foreach 'git fetch origin; tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null); git checkout ${tag:-master}; if [ -z ${tag} ]; then git pull; fi'"
+  # pulls the latest tag or master
+  pulllatest = "!git fetch origin; tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null); git checkout ${tag:-master}; if [ -z ${tag} ]; then git pull; fi"
 
   #release-notes = "!sh -c 'git log $(git describe --tags --abbrev=0) --no-merges --not master | format_release_notes.rb' -"
+
+  # pulls the latest release or master for each submodule
+  smpull = submodule foreach git pulllatest
 
 [color]
   diff = auto
