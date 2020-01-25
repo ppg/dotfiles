@@ -48,6 +48,9 @@
   #   git copr <remote> <pr#>
   copr = "!f() { git fetch $1 pull/$2/head:pr-$2 && git checkout pr-$2; }; f"
 
+  # Pull latest submodules
+  smpull = "submodule foreach 'git fetch origin; tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null); git checkout ${tag:-master}; if [ -z ${tag} ]; then git pull; fi'"
+
   #release-notes = "!sh -c 'git log $(git describe --tags --abbrev=0) --no-merges --not master | format_release_notes.rb' -"
 
 [color]
