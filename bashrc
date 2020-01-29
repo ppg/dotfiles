@@ -210,6 +210,13 @@ if [[ -n "$PS1" ]] ; then
   # Setup rbenv
   elif which rbenv &> /dev/null; then
     eval "$(rbenv init -)"
+  elif [ -d "$HOME/.rbenv/bin" ]; then
+    export PATH="$HOME/.rbenv/bin:$PATH"
+    export RBENV_ROOT="$HOME/.rbenv"
+    eval "$(rbenv init -)"
+  elif [ -d /usr/local/var/rbenv ]; then
+    export RBENV_ROOT=/usr/local/var/rbenv
+    eval "$(rbenv init -)"
   fi
 
   # If hub is installed, use over git
