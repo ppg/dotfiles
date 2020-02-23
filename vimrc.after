@@ -40,6 +40,7 @@ set spelllang=en
 set spellfile=$HOME/.spell/en.utf-8.add
 " TODO(ppg): how to get undercurl to be red?
 highlight SpellBad gui=undercurl guisp=red term=undercurl cterm=undercurl
+autocmd FileType cucumber setlocal spell
 autocmd FileType gitcommit setlocal spell
 autocmd FileType markdown setlocal spell
 autocmd FileType text setlocal spell
