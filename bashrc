@@ -187,6 +187,9 @@ if [[ -n "$PS1" ]] ; then
   export PYENV_ROOT=/usr/local/var/pyenv
   if which pyenv &> /dev/null; then eval "$(pyenv init -)"; fi
 
+  # Setup poetry if installed
+  export PATH="$HOME/.poetry/bin:$PATH"
+
   # Setup nvm and avn
   export NVM_DIR=~/.nvm
   if [ -s "$NVM_DIR/nvm.sh" ]; then # Linux
