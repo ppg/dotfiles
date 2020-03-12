@@ -173,16 +173,10 @@ if [[ -n "$PS1" ]] ; then
 
   # Setup custom Go install if present
   [ -d /usr/local/go/bin ] && export PATH=$PATH:/usr/local/go/bin
-  # Setup Go root
-  if [ -d /jcdata-source/go ]; then
-    export GOPATH=/jcdata-source/go
-  else
-    export GOPATH=$HOME/go
-  fi
-  #export GOBIN=$GOPATH/bin
-  export PATH=$PATH:$GOPATH/bin
-  # Turn on go modules
-  export GO111MODULE=on
+  export GOPATH=$HOME/go
+  [[ -d "${GOPATH}/bin" ]] && export PATH=$PATH:$GOPATH/bin
+  # Enable golangci-lint bash completiong if installed
+  if command -v golangci-lint &> /dev/null; then source <(golangci-lint completion bash); fi
 
   # FIXME: plenv shims configure and messes up nokogiri; disable until its been troublshot
   # Setup plenv
