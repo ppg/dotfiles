@@ -301,7 +301,4 @@ if [[ -n "$PS1" ]] ; then
 
   # Setup travis CLI bash extensions if present
   [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
-
-  # Add ssh keys to ssh agent if not added
-  ssh-add -l &> /dev/null || ssh-add &> /dev/null
 fi # if [[ -n "$PS1" ]]; then
