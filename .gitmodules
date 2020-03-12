@@ -37,3 +37,6 @@
 [submodule "janus/vim-abolish"]
 	path = janus/vim-abolish
 	url = https://github.com/tpope/vim-abolish.git
+[submodule "janus/vim-ginkgo"]
+	path = janus/vim-ginkgo
+	url = https://github.com/ivy/vim-ginkgo.git
