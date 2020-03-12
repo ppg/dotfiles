@@ -29,6 +29,9 @@ set foldenable          " fold by default
 set foldlevel=3         " start on methods for normal class
 
 " Solarized
+" With black light (pallet color 8) set to #0387AD we need to set termtrans:
+"   https://github.com/altercation/solarized/issues/220#issuecomment-269930034
+let g:solarized_termtrans = 1
 set background=dark
 colorscheme solarized
 " undercurl support
