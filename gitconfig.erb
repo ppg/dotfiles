@@ -64,6 +64,9 @@
   # pulls the latest release or master for each submodule
   smpull = submodule foreach git pulllatest
 
+[branch]
+  autosetupmerge = true
+
 [color]
   diff = auto
   status = auto
@@ -74,9 +77,6 @@
   excludesfile = ~/.gitignore
 #  autocrlf = true
 #  safecrlf = false
-
-[help]
-  autocorrect = 1
 
 <% diffmerge_path = `which diffmerge`.strip -%>
 [difftool.diffmerge]
@@ -108,14 +108,28 @@
 [diff]
   tool = <%= tool %>
   guitool = <%= tool %>
+  colorMoved = zebra
   wsErrorHighlight = all
+
+[diff "nodiff"]
+  command = /bin/true
+
+[fetch]
+  prune = true
+
+[help]
+  autocorrect = 1
+
 [merge]
   tool = <%= tool %>
   guitool = <%= tool %>
   wsErrorHighlight = all
 
-[diff "nodiff"]
-  command = /bin/true
+[push]
+  default = simple
+
+[remote.origin]
+  push = HEAD
 
 [sendemail]
   from = Peter P. Gengler <<%= @email %>>
@@ -125,20 +139,13 @@
   smtpserverport = 587
   chainreplyto = false
 
-[push]
-  default = simple
-
-[remote.origin]
-  push = HEAD
-
-[branch]
-  autosetupmerge = true
-
+# Per branch configuration
 [branch "master"]
   mergeoptions = --ff-only
 
 [branch "develop"]
   mergeoptions = --ff-only
 
+# Use SSH instead of HTTPS for github
 [url "git@github.com:"]
   insteadOf = https://github.com/
