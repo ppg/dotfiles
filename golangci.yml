@@ -1,0 +1,16 @@
+linters-settings:
+
+linters:
+  #disable-all: true
+  enable:
+    # Still broken, use Syntastic instead
+    #- golint
+    #- stylecheck
+  presets:
+    - bugs
+    #- style
+    - unused
+
+issues:
+  # https://github.com/golangci/golangci-lint/issues/928
+  exclude-use-default: false

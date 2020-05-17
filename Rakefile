@@ -12,6 +12,7 @@ SYMLINK_WHITELIST = {
   'bash_completion': nil,
   'bash_profile': nil,
   'bashrc': nil,
+  'golangci.yml': nil,
   'gitconfig.erb': nil,
   'inputrc': nil,
   'irbrc': nil,
