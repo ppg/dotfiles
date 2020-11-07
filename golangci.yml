@@ -1,16 +1,29 @@
-linters-settings:
-
 linters:
-  #disable-all: true
+  # Stabalize the linters
+  disable-all: true
   enable:
-    # Still broken, use Syntastic instead
-    #- golint
-    #- stylecheck
-  presets:
-    - bugs
-    #- style
+    - asciicheck
+    #- bodyclose
+    - deadcode
+    - errcheck
+    #- exhaustive
+    #- exportloopref
+    - gosec
+    - govet
+    - ineffassign
+    - misspell
+    #- noctx
+    #- rowserrcheck
+    #- scopelint
+    #- sqlclosecheck
+    - staticcheck
+    - structcheck
+    - typecheck
+    #- unparam
     - unused
+    - varcheck
 
 issues:
-  # https://github.com/golangci/golangci-lint/issues/928
-  exclude-use-default: false
+  # The list of ids of default excludes to include or disable.
+  include:
+    - EXC0002 # disable excluding of issues about comments from golint
