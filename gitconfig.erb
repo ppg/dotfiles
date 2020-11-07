@@ -1,13 +1,11 @@
 <% print("Your Full Name: "); STDOUT.flush; @fullname = STDIN.gets.chomp -%>
 <% print("Your Email: "); STDOUT.flush; @email = STDIN.gets.chomp -%>
 <% print("GitHub Username: "); STDOUT.flush; @github_username = STDIN.gets.chomp -%>
-<%# print("GitHub API Token: "); STDOUT.flush; @github_token = STDIN.gets.chomp -%>
 [user]
   name = <%= @fullname %>
   email = <%= @email %>
 [github]
   user = <%= @github_username %>
-  #token = <%= @github_token %>
 [credential]
 <% if "#{`uname`}" == "Darwin" -%>
   helper = osxkeychain
@@ -64,8 +62,17 @@
   # pulls the latest release or master for each submodule
   smpull = submodule foreach git pulllatest
 
+  # file-on-branches
+  #   git file-on-branches
+  file-on-branches = "!f() { git log --all --format=%H $1 | while read f; do git branch --contains $f; done | sort -u;  }; f"
+
 [branch]
   autosetupmerge = true
+# Per branch configuration
+[branch "master"]
+  mergeoptions = --ff-only
+[branch "develop"]
+  mergeoptions = --ff-only
 
 [color]
   diff = auto
@@ -75,44 +82,36 @@
 [core]
   editor = /usr/bin/vim
   excludesfile = ~/.gitignore
-#  autocrlf = true
-#  safecrlf = false
+  # https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration#_core_autocrlf
+  autocrlf = input
 
 <% diffmerge_path = `which diffmerge`.strip -%>
-[difftool.diffmerge]
-  #path = <%= diffmerge_path %>
-  cmd = <%= diffmerge_path %> "$LOCAL" "$REMOTE"
-[mergetool.diffmerge]
-  #path = <%= diffmerge_path %>
-  cmd = <%= diffmerge_path %> --merge --result="$MERGED" "$LOCAL" "$BASE" "$REMOTE"
-  trustExitCode = true
-
 <% meld_path = `which meld`.strip -%>
-[difftool.meld]
-  path = <%= meld_path %>
-[mergetool.meld]
-  path = <%= meld_path %>
-
 <% opendiff_path = `which opendiff`.strip -%>
-[difftool.opendiff]
-  path = <%= opendiff_path %>
-[mergetool.opendiff]
-  path = <%= opendiff_path %>
-
+<% default_tool = diffmerge_path.empty? ? meld_path.empty? ? 'opendiff' : 'meld' : 'diffmerge' -%>
+[diff]
+  tool = <%= default_tool %>
+  guitool = <%= default_tool %>
+  colorMoved = zebra
+  wsErrorHighlight = all
+[diff "nodiff"]
+  command = /bin/true
 [difftool]
   prompt = false
 [mergetool]
   prompt = false
-
-<% tool = diffmerge_path.empty? ? meld_path.empty? ? 'opendiff' : 'meld' : 'diffmerge' -%>
-[diff]
-  tool = <%= tool %>
-  guitool = <%= tool %>
-  colorMoved = zebra
-  wsErrorHighlight = all
-
-[diff "nodiff"]
-  command = /bin/true
+<% unless diffmerge_path.empty? -%>
+[difftool "diffmerge"]
+  cmd = <%= diffmerge_path %> "$LOCAL" "$REMOTE"
+<% end -%>
+<% unless meld_path.empty? -%>
+[difftool "meld"]
+  path = <%= meld_path %>
+<% end -%>
+<% unless opendiff_path.empty? -%>
+[difftool "opendiff"]
+  path = <%= opendiff_path %>
+<% end -%>
 
 [fetch]
   prune = true
@@ -121,14 +120,27 @@
   autocorrect = 1
 
 [merge]
-  tool = <%= tool %>
-  guitool = <%= tool %>
+  tool = <%= default_tool %>
+  guitool = <%= default_tool %>
   wsErrorHighlight = all
+<% unless diffmerge_path.empty? -%>
+[mergetool "diffmerge"]
+  cmd = <%= diffmerge_path %> --merge --result="$MERGED" "$LOCAL" "$BASE" "$REMOTE"
+  trustExitCode = true
+<% end -%>
+<% unless meld_path.empty? -%>
+[mergetool "meld"]
+  path = <%= meld_path %>
+<% end -%>
+<% unless opendiff_path.empty? -%>
+[mergetool "opendiff"]
+  path = <%= opendiff_path %>
+<% end -%>
 
 [push]
   default = simple
 
-[remote.origin]
+[remote "origin"]
   push = HEAD
 
 [sendemail]
@@ -138,13 +150,6 @@
   smtpencryption = tls
   smtpserverport = 587
   chainreplyto = false
-
-# Per branch configuration
-[branch "master"]
-  mergeoptions = --ff-only
-
-[branch "develop"]
-  mergeoptions = --ff-only
 
 # Use SSH instead of HTTPS for github
 [url "git@github.com:"]
