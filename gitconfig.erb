@@ -26,11 +26,11 @@
   branch-edit = branch --edit-description
   branch-desc = !git config branch.${1:-`git symbolic-ref --short HEAD`}.description && :
   <%- branch_format = '%(HEAD) %(color:red)%(align:9)%(objectname:short)%(upstream:trackshort)%(end)%(color:reset) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject)' -%>
-  <%- branch_format_ext = "#{branch_format} - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))" -%>
+  <%- branch_format_ext = "#{branch_format} - %(authorname) (%(color:green)%(creatordate:relative)%(color:reset))" -%>
   br = for-each-ref refs/heads/ --format='<%= branch_format %>'
-  brs = for-each-ref refs/heads/ --format='<%= branch_format %>' --sort=committerdate
+  brs = for-each-ref refs/heads/ --sort=creatordate --format='<%= branch_format %>'
   brn = for-each-ref refs/heads/ --format='<%= branch_format_ext %>'
-  brsn = for-each-ref refs/heads/ --format='<%= branch_format_ext %>' --sort=committerdate
+  brsn = for-each-ref refs/heads/ --sort=creatordate --format='<%= branch_format_ext %>'
 
   # log advanced helpers
   lol = log --graph --pretty=oneline --abbrev-commit --decorate
@@ -43,6 +43,15 @@
   lonfirst = log --graph --pretty=format:'<%= log_format %>' --abbrev-commit --decorate --first-parent
   # Shows commits per person in descending order
   loscore = shortlog -n --summary
+
+  # tag advanced helpers
+  # NOTE: authorname/creator/taggername aren't usually set usefully when one makes a GH release, so don't bother with them
+  <%- tag_format = '%(HEAD) %(color:red)%(align:9)%(objectname:short)%(end)%(color:reset) %(color:yellow)%(refname:short)%(color:reset) - %(contents:body)' -%>
+  <%- tag_format_ext = "#{tag_format} (%(color:green)%(creatordate:relative)%(color:reset))" -%>
+  t = for-each-ref refs/tags/ --format='<%= tag_format %>'
+  ts = for-each-ref refs/tags/ --sort=creatordate --format='<%= tag_format %>'
+  tn = for-each-ref refs/tags/ --format='<%= tag_format_ext %>'
+  tns = for-each-ref refs/tags/ --sort=creatordate --format='<%= tag_format_ext %>'
 
   # checkout Branch from remote (for when git co <branch_name> won't work
   # because it matches more than one remote branch)
