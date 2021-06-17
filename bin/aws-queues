@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+  echo "usage: bin/aws-queues <profile> [...<queue-name>]"
+}
+
+readonly profile="${1:-}"
+if [[ -z "${profile}" ]]; then
+  usage
+  exit 1
+fi
+shift
+
+readonly conf_dir=~/bin/aws-queues.d
+readonly conf_file="${conf_dir}/${profile}"
+if [[ ! -f "${conf_file}" ]]; then
+  echo "ERROR: cannot find profile: ${profile}"
+  echo "Please add ${conf_file}"
+  exit 2
+fi
+
+default_queues=()
+while IFS= read -r line; do
+  # TODO(ppg): support ignoring/stripping comments
+
+  # If we haven't set aws_region, set that
+  if [[ -z "${aws_region+x}" ]]; then
+    readonly aws_region="${line}"
+  else
+    # add to queues
+    default_queues+=("${line}")
+  fi
+done < "${conf_file}"
+readonly default_queues
+
+if [[ -z "${aws_region}" ]]; then
+  echo "ERROR: first line of ${conf_file} must be region"
+  exit 3
+fi
+
+if [[ "$#" -gt 0 ]]; then
+  readonly queues=("${@}")
+else
+  readonly queues=("${default_queues[@]}")
+fi
+if [[ "${#queues[@]}" -eq 0 ]]; then
+  echo "ERROR: no default queues found and no queue specified."
+  usage
+  exit 3
+fi
+
+readonly attribute_list='ApproximateNumberOfMessages ApproximateNumberOfMessagesNotVisible'
+readonly jq_format='.Attributes|{ "visible": .ApproximateNumberOfMessages, "inflight": .ApproximateNumberOfMessagesNotVisible }'
+for queue in "${queues[@]}"; do
+  printf "%-40s " "${queue}"
+  # shellcheck disable=SC2086
+  aws --region "${aws_region}" sqs get-queue-attributes \
+    --queue-url "https://sqs.${aws_region}.amazonaws.com/${AWS_ACCOUNT_NUMBER}/${queue}" \
+    --attribute-names ${attribute_list} | jq -c "${jq_format}"
+done
