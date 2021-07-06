@@ -18,8 +18,12 @@ set statusline+=%h%w%m%r%y                              " help, preview, modifie
 set statusline+=\ -\ %{fugitive#statusline()}
 " Add in rvm ruby version
 set statusline+=\ -\ %{exists('g:loaded_rvm')?rvm#statusline():''}
+" Add in syntastic warnings
+"set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
-set statusline+=%=[\%03.3b\:\%02.2B]\ %-16(\ %l,%c\ %)  " byte value, byte value (hex), line number, column number
+set statusline+=%=[\%05b\:0x\%04B]\ %-16(\ %l,%c\ %)    " byte value, byte value (hex), line number, column number
 set statusline+=%L/%P                                   " total lines, percentage of file
 
 " Folding settings
@@ -71,12 +75,13 @@ let g:syntastic_ruby_rubocop_args = '--display-cop-names --display-style-guide'
 let g:syntastic_eruby_ruby_quiet_messages = { 'regex': 'possibly useless use of a variable in void context' }
 
 " Go
+" Turn on gopls
+"let g:go_gopls_options = ['-logfile=auto', '-remote=auto', '-rpc.trace']
+let g:go_def_mode = 'gopls'
+let g:go_info_mode = 'gopls'
 set updatetime=100
-" Tell vim-go to use gopls
-" https://github.com/golang/go/wiki/gopls#vim--neovim
-let g:go_def_mode='gopls'
-let g:go_info_mode='gopls'
-let g:go_metalinter_command = 'golangci-lint'
+"let g:go_auto_type_info = 1 " shows type info at bottom when on something
+let g:go_auto_sameids = 1 " highlights the same variables when cursor is there
 " Support :A
 " https://github.com/fatih/vim-go/wiki/Tutorial#vimrc-improvements-5
 autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
@@ -85,26 +90,32 @@ autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
 autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 " https://github.com/fatih/vim-go/wiki/Tutorial#identifier-resolution
 " autocmd FileType go nmap <Leader>i <Plug>(go-info)
-"let g:go_auto_type_info = 1 " shows type info at bottom when on something
-let g:go_auto_sameids = 1 " highlights the same variables when cursor is there
+let g:go_build_tags = "acceptance benchmark functional integration client_test"
 " Enable goimports to automatically insert import paths
 let g:go_fmt_command = "goimports"
 let g:go_fmt_fail_silently = 1 " let syntastic show compile errors instead of opening location list
-"let g:syntastic_go_checkers = ['go', 'gofmt', 'golint', 'govet', 'errcheck']
-"let g:syntastic_go_checkers = ['gometalinter']
-let g:syntastic_go_checkers = ['go', 'gofmt', 'golangci_lint']
-let g:syntastic_go_go_test_args = "-tags 'acceptance benchmark functional integration'"
-let g:syntastic_go_go_build_args = "-tags 'acceptance benchmark functional integration'"
+" Go Syntastic
+" TODO(ppg): disable golint when
+" https://github.com/golangci/golangci-lint/issues/928 is fully fixed
+let g:syntastic_go_checkers = ['go', 'gofmt', 'golint', 'golangci_lint']
+let g:syntastic_go_go_test_args = "-tags 'acceptance benchmark functional integration client_test'"
+let g:syntastic_go_go_build_args = "-tags 'acceptance benchmark functional integration client_test'"
 " TODO(ppg): why can't I get govet with the makeprgBuild to work?
 "let g:syntastic_go_govet_exe = "go tool vet"
 " < go1.12
 "let g:syntastic_go_govet_args = "-all -shadow -tags 'acceptance benchmark functional integration devci'"
 "let g:syntastic_go_govet_args = "-vettool=$(which shadow) -tags 'benchmark functional integration devci'"
-let g:syntastic_go_golangci_lint_args = "--build-tags 'acceptance benchmark functional integration devci'"
+" When entering a golangci_lint set the fname to the current directory so it compiles
+"   see https://vim.fandom.com/wiki/Set_working_directory_to_the_current_file
+autocmd BufEnter *.go silent! let g:syntastic_go_golangci_lint_fname = shellescape(expand("%:p:h", 1))
+let g:syntastic_go_golangci_lint_args = "--build-tags 'acceptance benchmark functional integration devci client_test'"
+"let g:syntastic_go_golangci_lint_defaults = {'type': 'w'}
+let g:syntastic_go_golangci_lint_type = 'w'
 
 " JavaScript
 "let g:syntastic_javascript_checkers = ['jshint', 'eslint']
 let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_eslint_exe = '$(npm bin)/eslint'
 " TODO(ppg): don't use ctrl-f, use for forward by page
 "autocmd FileType javascript vnoremap <buffer> <c-f> :call RangeJsBeautify()<cr>
 "autocmd FileType json vnoremap <buffer> <c-f> :call RangeJsonBeautify()<cr>
@@ -113,16 +124,34 @@ let g:syntastic_javascript_checkers = ['eslint']
 "autocmd FileType css vnoremap <buffer> <c-f> :call RangeCSSBeautify()<cr>
 
 " Python
-let g:syntastic_python_python_exec = 'python3'
-let g:syntastic_python_flake8_exec = 'python3'
-let g:syntastic_python_flake8_args = ['-m', 'flake8']
+let g:black_quiet = 1
+"let g:syntastic_python_python_exec = 'python'
+"let g:syntastic_python_flake8_exec = 'python'
+"let g:syntastic_python_flake8_args = ['-m', 'flake8']
+let g:syntastic_python_checkers = ['python', 'flake8', 'pylint', 'mypy']
+"let g:vim_isort_python_version = 'python'
 autocmd BufRead,BufNewFile *.py set textwidth=88
-autocmd BufWritePre *.py execute ':Black'
+" waiting on https://github.com/psf/black/pull/1733 to be released
+" workaround: https://github.com/psf/black/issues/252
+autocmd BufWritePre *.py silent! execute ':Black'
 autocmd BufWritePre *.py execute ':Isort'
+"" TODO(ppg): try to get this working
+"" Enable python-language-server
+"if executable('pyls')
+"# Set these to default enum value
+"  au User lsp_setup call lsp#register_server({
+"    \ 'name': 'pyls',
+"    \ 'cmd': {server_info->['pyls']},
+"    \ 'whitelist': ['python'],
+"    \ 'workspace_config': {'pyls': {'plugins': {'black': {'enabled': v:true}}}}
+"    \ })
+"endif
+" Set *.jinja to be jinja2
+au BufRead,BufNewFile *.jinja set filetype=jinja2
 
 "" Shell
 let g:syntastic_sh_shellcheck_args = "--external-sources"
-let g:syntastic_sh_checkers = ['sh', 'shellcheck', 'bashate'] ", 'checkbashisms']
+let g:syntastic_sh_checkers = ['sh', 'shellcheck']
 
 " API Blueprint
 " Fix ctrl-b to be back still
@@ -154,6 +183,9 @@ autocmd BufWritePre * :call TrimWhiteSpace()
 
 " Override *.ino to be Arduino files
 au BufRead,BufNewFile *.ino set filetype=cpp
+
+" Nginx
+au BufRead,BufNewFile */nginx/conf.d/* set ft=nginx
 
 " map for cnext and cprevious
 nnoremap <silent> <leader>] :lnext<CR>
