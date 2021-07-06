@@ -109,6 +109,9 @@ if [[ -n "$PS1" ]] ; then
   #export LSCOLORS=ExFxCxDxBxegedabagacad
   #export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
 
+  # Define a color helper function to colorize stderr
+  color()(set -o pipefail;"$@" 2>&1>&3|sed $'s,.*,\e[31m&\e[m,'>&2)3>&1
+
 
   # some more ls aliases
   alias ll='ls -alF'
@@ -184,8 +187,9 @@ if [[ -n "$PS1" ]] ; then
   #if which plenv > /dev/null; then eval "$(plenv init -)"; fi
 
   # Setup pyenv
-  export PYENV_ROOT=/usr/local/var/pyenv
-  if which pyenv &> /dev/null; then eval "$(pyenv init -)"; fi
+  export PYENV_ROOT="$HOME/.pyenv"
+  export PATH="$PYENV_ROOT/bin:$PATH"
+  if command -v pyenv &> /dev/null; then eval "$(pyenv init -)"; fi
 
   # Setup poetry if installed
   export PATH="$HOME/.poetry/bin:$PATH"
@@ -301,4 +305,10 @@ if [[ -n "$PS1" ]] ; then
 
   # Setup travis CLI bash extensions if present
   [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
+
+  # Set DOCKER_SSH_AUTH_SOCK to allow OSX to set this to the magic socket that
+  # works with docker for mac.
+  #echo 'export DOCKER_SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock' >> ~/.bash_profile"
+  export DOCKER_SSH_AUTH_SOCK="${SSH_AUTH_SOCK}"
+
 fi # if [[ -n "$PS1" ]]; then
