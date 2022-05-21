@@ -19,8 +19,10 @@ fi
 # sudo apt-get install python-pygments python3-pygments
 alias catc='pygmentize -g'
 
-alias dc='docker-compose'
-alias dcci='docker-compose --file docker-compose.ci.yml'
+alias dc='docker compose'
+alias dcl='docker-compose'
+alias dcci='docker compose --file docker-compose.ci.yml'
+alias dccil='docker-compose --file docker-compose.ci.yml'
 
 # get dns on ubuntu
 alias dnsinfo='nmcli device show wlp4s0 | grep IP4.DNS'
