@@ -41,6 +41,12 @@ colorscheme solarized
 " undercurl support
 let &t_Cs = "\e[4:3m"
 let &t_Ce = "\e[4:0m"
+" vim-gitgutter color settings
+" See https://github.com/airblade/vim-gitgutter/commit/8db2fc5da0d5ad02fa4fa38ae16dc2fad9bfd201
+highlight GitGutterAdd      guibg=#073642 ctermbg=0
+highlight GitGutterChange   guibg=#073642 ctermbg=0
+highlight GitGutterDelete   guibg=#073642 ctermbg=0
+highlight SignColumn        guibg=#073642 ctermbg=0
 
 " Spell check
 set spelllang=en
