@@ -1,27 +1,27 @@
 [submodule "janus/tabular"]
 	path = janus/tabular
-	url = git://github.com/godlygeek/tabular.git
+	url = https://github.com/godlygeek/tabular.git
 [submodule "janus/vim-jade"]
 	path = janus/vim-jade
-	url = git@github.com:digitaltoad/vim-jade.git
+	url = https://github.com/digitaltoad/vim-jade.git
 [submodule "janus/vim-colors-solarized"]
 	path = janus/vim-colors-solarized
-	url = git://github.com/altercation/vim-colors-solarized.git
+	url = https://github.com/altercation/vim-colors-solarized.git
 [submodule "janus/vim-ansible-yaml"]
 	path = janus/vim-ansible-yaml
-	url = git://github.com/chase/vim-ansible-yaml.git
+	url = https://github.com/chase/vim-ansible-yaml.git
 [submodule "janus/vim-hashicorp-tools"]
 	path = janus/vim-hashicorp-tools
 	url = https://github.com/markcornick/vim-hashicorp-tools.git
 [submodule "janus/vim-arduino-ino"]
 	path = janus/vim-arduino-ino
-	url = git@github.com:jplaut/vim-arduino-ino.git
+	url = https://github.com/jplaut/vim-arduino-ino.git
 [submodule "janus/tagbar"]
 	path = janus/tagbar
 	url = https://github.com/majutsushi/tagbar.git
 [submodule "janus/salt-vim"]
 	path = janus/salt-vim
-	url = git@github.com:saltstack/salt-vim.git
+	url = https://github.com/saltstack/salt-vim.git
 [submodule "janus/vim-jsbeautify"]
 	path = janus/vim-jsbeautify
 	url = https://github.com/maksimr/vim-jsbeautify.git
