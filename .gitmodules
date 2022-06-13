@@ -5,7 +5,7 @@
 	path = janus/vim-jade
 	url = https://github.com/digitaltoad/vim-jade.git
 [submodule "janus/vim-colors-solarized"]
-	path = janus/vim-colors-solarized
+	path = vim/pack/ppgengler/start/vim-colors-solarize
 	url = https://github.com/altercation/vim-colors-solarized.git
 [submodule "janus/vim-ansible-yaml"]
 	path = janus/vim-ansible-yaml
