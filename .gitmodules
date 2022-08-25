@@ -31,3 +31,6 @@
 [submodule "vim/pack/ppgengler/start/vim-github-support"]
 	path = vim/pack/ppgengler/start/vim-github-support
 	url = git@github.com:rhysd/vim-github-support.git
+[submodule "vim/pack/ppgengler/start/vim-rails"]
+	path = vim/pack/ppgengler/start/vim-rails
+	url = https://github.com/tpope/vim-rails.git
