@@ -233,8 +233,7 @@ autocmd FileType apiblueprint nnoremap <C-b> <S-Up>
 au FileType cucumber setlocal textwidth=88
 
 " Markdown
-" Change to autoindent
-au FileType markdown set autoindent
+au FileType markdown setlocal wrap linebreak textwidth=72 nolist autoindent
 
 " Override filetypes
 au BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
