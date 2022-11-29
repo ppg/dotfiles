@@ -287,6 +287,9 @@ if [[ -n "$PS1" ]] ; then
   # If terraform is installed add to path
   if [ -e /jcdata-source/terraform ]; then export PATH="$PATH:/jcdata-source/terraform"; fi
 
+  # tfenv
+  [ -d "${HOME}/.tfenv/bin" ] && export PATH="$HOME/.tfenv/bin:$PATH"
+
   # Export EC2 stuff
   export EC2_HOME=$HOME/ec2-api-tools-1.3-57419
   [ -f $EC2_HOME/bin ] && export PATH=$PATH:$EC2_HOME/bin

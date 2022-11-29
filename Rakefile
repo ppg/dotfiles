@@ -18,12 +18,12 @@ SYMLINK_WHITELIST = {
   'irbrc': nil,
   'railsrc': nil,
   'screenrc': nil,
-  'vimrc.after': nil,
+  'vimrc': nil,
 
   # dir
   'bash_completion.d': nil,
   'bin': 'bin', # dir, no name change
-  'janus': nil,
+  'vim': nil,
 
   # NOTE: don't use stringify_keys but convert keys to strings with collect
 }.collect { |k, v| [k.to_s, v] }.to_h.freeze

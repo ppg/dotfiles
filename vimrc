@@ -1,30 +1,89 @@
-" Allow switching buffers with unsaved changes in the current one
-set hidden
+""
+"" Basic Setup
+""
+"" See https://github.com/carlhuda/janus/blob/60e6864fbd60dc8efa9dc4c6de40b7615452814c/janus/vim/core/before/plugin/settings.vim
+if has('vim_starting') && !has('nvim') && &compatible
+  set nocompatible                " Be iMproved
+endif
+set number                        " Show line numbers
+set ruler                         " Show line and column number
+syntax enable                     " Turn on syntax highlighting allowing local overrides
+set hidden                        " Allow switching buffers with unsaved changes in the current one
+" Neovim disallow changing 'enconding' option after initialization
+" see https://github.com/neovim/neovim/pull/2929 for more details
+if !has('nvim')
+  set encoding=utf-8              " Set default encoding to UTF-8
+endif
 
+""
+"" Whitespace
+""
+set nowrap                        " don't wrap lines
+set tabstop=2                     " a tab is two spaces
+set shiftwidth=2                  " an autoindent (with <<) is two spaces
+set expandtab                     " use spaces, not tabs
+set list                          " Show invisible characters
+set backspace=indent,eol,start    " backspace through everything in insert mode
+if exists("g:enable_mvim_shift_arrow")
+  let macvim_hig_shift_movement = 1 " mvim shift-arrow-keys
+endif
+" List chars
+set listchars=""                  " Reset the listchars
+set listchars=tab:\ \             " a tab should display as "  ", trailing whitespace as "."
+set listchars+=trail:.            " show trailing spaces as dots
+set listchars+=extends:>          " The character to show in the last column when wrap is
+                                  " off and the line continues beyond the right of the screen
+set listchars+=precedes:<         " The character to show in the last column when wrap is
+"" https://github.com/ntpeters/vim-better-whitespace
+let g:better_whitespace_enabled=1
+let g:strip_whitespace_on_save=1
+let g:strip_whitespace_confirm=0
+
+""
+"" Searching
+""
+set hlsearch    " highlight matches
+set incsearch   " incremental searching
+set ignorecase  " searches are case insensitive...
+set smartcase   " ... unless they contain at least one capital letter
+
+
+""
+"" Wild settings
+""
 " These make auto-complete work like it does in bash (only to the ambiguity)
 set wildmenu
 set wildmode=list:longest
+" Disable output and VCS files
+set wildignore+=*.o,*.out,*.obj,.git,*.rbc,*.rbo,*.class,.svn,*.gem
+" Disable archive files
+set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
+" Ignore bundler and sass cache
+set wildignore+=*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*/.sass-cache/*
+" Disable temp and backup files
+set wildignore+=*.swp,*~,._*
 
-" Status line
-" The one shipped with Janus:
-" statusline=%f %m %rLine:%l/%L[%p%%]Col:%vBuf:#%n[%b][0x%B]
-"set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v][%p%%]\ [LEN=%L]
+""
+"" Backup and swap files
+""
+set backupdir^=~/.vim/_backup//    " where to put backup files.
+set directory^=~/.vim/_temp//      " where to put swap files.
+
+""
+"" Status line
+""
 " Useful status information at bottom of screen
-set statusline=[%n]\                                    " Buffer number
-set statusline+=%<%.99f\                                " File name (relative to current path)
-set statusline+=%h%w%m%r%y                              " help, preview, modified, readonly, filetype
-
-" Add in git information from fugitive
-set statusline+=\ -\ %{fugitive#statusline()}
-" Add in rvm ruby version
-set statusline+=\ -\ %{exists('g:loaded_rvm')?rvm#statusline():''}
-" Add in syntastic warnings
-"set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
+set laststatus=2                                                    " always show the status bar
+set statusline=[%n]\                                                " Buffer number
+set statusline+=%<%.99f\                                            " File name (relative to current path)
+set statusline+=%h%w%m%r%y                                          " help, preview, modified, readonly, filetype
+set statusline+=\ -\ %{fugitive#statusline()}                       " Add in git information from fugitive
+set statusline+=\ -\ %{exists('g:loaded_rvm')?rvm#statusline():''}  " Add in rvm ruby version
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}                        " Add in syntastic warnings
 set statusline+=%*
-
-set statusline+=%=[\%05b\:0x\%04B]\ %-16(\ %l,%c\ %)    " byte value, byte value (hex), line number, column number
-set statusline+=%L/%P                                   " total lines, percentage of file
+set statusline+=%=[\%05b\:0x\%04B]\ %-16(\ %l,%c\ %)                " byte value, byte value (hex), line number, column number
+set statusline+=%L/%P                                               " total lines, percentage of file
 
 " Folding settings
 set foldmethod=indent   " fold based on indent
@@ -43,10 +102,14 @@ let &t_Cs = "\e[4:3m"
 let &t_Ce = "\e[4:0m"
 " vim-gitgutter color settings
 " See https://github.com/airblade/vim-gitgutter/commit/8db2fc5da0d5ad02fa4fa38ae16dc2fad9bfd201
-highlight GitGutterAdd      guibg=#073642 ctermbg=0
-highlight GitGutterChange   guibg=#073642 ctermbg=0
-highlight GitGutterDelete   guibg=#073642 ctermbg=0
-highlight SignColumn        guibg=#073642 ctermbg=0
+highlight! link SignColumn LineNr
+highlight! link GitGutterAdd LineNr
+highlight! link GitGutterChange LineNr
+highlight! link GitGutterDelete LineNr
+" highlight GitGutterAdd      guibg=#073642 ctermbg=0
+" highlight GitGutterChange   guibg=#073642 ctermbg=0
+" highlight GitGutterDelete   guibg=#073642 ctermbg=0
+" highlight SignColumn        guibg=#073642 ctermbg=0
 
 " Spell check
 set spelllang=en
@@ -63,7 +126,8 @@ let g:syntastic_aggregate_errors = 1
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_jump = 0
 let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
+" Leave disabled, see https://github.com/vim-syntastic/syntastic/issues/2238
+"let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_mode_map = { 'mode': 'active' } ", 'passive_filetypes': ['go'] }
 " Potentially enable to make vim saving go faster, but might skip go checking
@@ -82,7 +146,9 @@ let g:syntastic_eruby_ruby_quiet_messages = { 'regex': 'possibly useless use of 
 
 " Go
 " Turn on gopls
-"let g:go_gopls_options = ['-logfile=auto', '-remote=auto', '-rpc.trace']
+let g:go_gopls_options = ['-remote=auto']
+" Enable for debug
+"let g:go_gopls_options = ['-remote=auto', '-logfile=auto', '-debug=:0', '-remote.debug=:0', '-rpc.trace']
 let g:go_def_mode = 'gopls'
 let g:go_info_mode = 'gopls'
 set updatetime=100
@@ -97,8 +163,6 @@ autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 " https://github.com/fatih/vim-go/wiki/Tutorial#identifier-resolution
 " autocmd FileType go nmap <Leader>i <Plug>(go-info)
 let g:go_build_tags = "acceptance benchmark functional integration client_test"
-" Enable goimports to automatically insert import paths
-let g:go_fmt_command = "goimports"
 let g:go_fmt_fail_silently = 1 " let syntastic show compile errors instead of opening location list
 " Go Syntastic
 " TODO(ppg): disable golint when
@@ -117,11 +181,13 @@ autocmd BufEnter *.go silent! let g:syntastic_go_golangci_lint_fname = shellesca
 let g:syntastic_go_golangci_lint_args = "--build-tags 'acceptance benchmark functional integration devci client_test'"
 "let g:syntastic_go_golangci_lint_defaults = {'type': 'w'}
 let g:syntastic_go_golangci_lint_type = 'w'
+" Go - ginkgo
+autocmd BufNewFile,BufReadPost *_test.go set filetype=ginkgo.go
 
 " JavaScript
 "let g:syntastic_javascript_checkers = ['jshint', 'eslint']
 let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_javascript_eslint_exe = '$(npm bin)/eslint'
+let g:syntastic_javascript_eslint_exe = 'npx eslint'
 " TODO(ppg): don't use ctrl-f, use for forward by page
 "autocmd FileType javascript vnoremap <buffer> <c-f> :call RangeJsBeautify()<cr>
 "autocmd FileType json vnoremap <buffer> <c-f> :call RangeJsonBeautify()<cr>
@@ -167,25 +233,11 @@ autocmd FileType apiblueprint nnoremap <C-b> <S-Up>
 au FileType cucumber setlocal textwidth=88
 
 " Markdown
-" Change to autoindent
-au FileType markdown set autoindent
+au FileType markdown setlocal wrap linebreak textwidth=72 nolist autoindent
 
 " Override filetypes
 au BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
 au BufRead,BufNewFile .eslintrc set filetype=json
-
-" Highlight trailing whitespace, and remove automatically on save
-" TODO Look for a plugin for this
-highlight ExtraWhitespace ctermbg=red guibg=red
-match ExtraWhitespace /\s\+$/
-autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-autocmd BufWinLeave * call clearmatches()
-function! TrimWhiteSpace()
-  %s/\s\+$//e
-endfunction
-autocmd BufWritePre * :call TrimWhiteSpace()
 
 " Override *.ino to be Arduino files
 au BufRead,BufNewFile *.ino set filetype=cpp
