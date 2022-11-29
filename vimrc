@@ -146,7 +146,9 @@ let g:syntastic_eruby_ruby_quiet_messages = { 'regex': 'possibly useless use of 
 
 " Go
 " Turn on gopls
-"let g:go_gopls_options = ['-logfile=auto', '-remote=auto', '-rpc.trace']
+let g:go_gopls_options = ['-remote=auto']
+" Enable for debug
+"let g:go_gopls_options = ['-remote=auto', '-logfile=auto', '-debug=:0', '-remote.debug=:0', '-rpc.trace']
 let g:go_def_mode = 'gopls'
 let g:go_info_mode = 'gopls'
 set updatetime=100
@@ -161,8 +163,6 @@ autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 " https://github.com/fatih/vim-go/wiki/Tutorial#identifier-resolution
 " autocmd FileType go nmap <Leader>i <Plug>(go-info)
 let g:go_build_tags = "acceptance benchmark functional integration client_test"
-" Enable goimports to automatically insert import paths
-let g:go_fmt_command = "goimports"
 let g:go_fmt_fail_silently = 1 " let syntastic show compile errors instead of opening location list
 " Go Syntastic
 " TODO(ppg): disable golint when
@@ -181,6 +181,8 @@ autocmd BufEnter *.go silent! let g:syntastic_go_golangci_lint_fname = shellesca
 let g:syntastic_go_golangci_lint_args = "--build-tags 'acceptance benchmark functional integration devci client_test'"
 "let g:syntastic_go_golangci_lint_defaults = {'type': 'w'}
 let g:syntastic_go_golangci_lint_type = 'w'
+" Go - ginkgo
+autocmd BufNewFile,BufReadPost *_test.go set filetype=ginkgo.go
 
 " JavaScript
 "let g:syntastic_javascript_checkers = ['jshint', 'eslint']
