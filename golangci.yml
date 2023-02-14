@@ -23,6 +23,10 @@ linters:
     - unused
 
 linters-settings:
+  govet:
+    check-shadowing: true
+    shadow:
+      strict: true
   revive:
     # missing a lot of config to do this
     #enable-all-rules: true
