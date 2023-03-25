@@ -21,7 +21,7 @@ if [[ ! -f "${conf_file}" ]]; then
   exit 2
 fi
 
-default_queues=()
+queues=()
 while IFS= read -r line; do
   # TODO(ppg): support ignoring/stripping comments
 
@@ -30,21 +30,19 @@ while IFS= read -r line; do
     readonly aws_region="${line}"
   else
     # add to queues
-    default_queues+=("${line}")
+    queues+=("${line}")
   fi
 done < "${conf_file}"
-readonly default_queues
 
-if [[ -z "${aws_region}" ]]; then
+if [[ -z "${aws_region:-}" ]]; then
   echo "ERROR: first line of ${conf_file} must be region"
   exit 3
 fi
 
 if [[ "$#" -gt 0 ]]; then
-  readonly queues=("${@}")
-else
-  readonly queues=("${default_queues[@]}")
+  queues=("${@}")
 fi
+readonly queues
 if [[ "${#queues[@]}" -eq 0 ]]; then
   echo "ERROR: no default queues found and no queue specified."
   usage
