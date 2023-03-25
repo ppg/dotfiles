@@ -205,7 +205,7 @@ let g:syntastic_python_checkers = ['python', 'flake8', 'pylint', 'mypy']
 autocmd BufRead,BufNewFile *.py set textwidth=88
 " waiting on https://github.com/psf/black/pull/1733 to be released
 " workaround: https://github.com/psf/black/issues/252
-autocmd BufWritePre *.py silent! execute ':Black'
+"autocmd BufWritePre *.py silent! execute ':Black'
 autocmd BufWritePre *.py execute ':Isort'
 "" TODO(ppg): try to get this working
 "" Enable python-language-server
@@ -232,7 +232,24 @@ autocmd FileType apiblueprint nnoremap <C-b> <S-Up>
 " Gherkin
 au FileType cucumber setlocal textwidth=88
 
-" Markdown
+" Markdown (vim-polygot)
+" TODO(ppg): re-flowing bullets doesn't work with auto-insert bullets;
+" I keep auto-insert since auto-wrap works while typing, although when
+" wrapped bullet insertion no longer works. Some issues:
+"   https://github.com/preservim/vim-markdown/issues/232 - Rewrapping a bullet point inserts new bullet points
+"   https://github.com/preservim/vim-markdown/issues/390 - gq wrapping is still broken
+" This appears to have no effect for some reason to fix things?
+"   au FileType markdown setlocal comments=fb:*,fb:+,fb:-,n:> indentexpr=
+" Is there no solution that allows:
+"
+" 1. auto-insert new list items when hitting ENTER or O at the same indentation
+" 2. auto-wrap on text entry; including when you hit ENTER for 1
+" 3. allow reformatting of bullets that are too long without inserting new
+"    bullets.
+let g:vim_markdown_frontmatter = 1
+" let g:vim_markdown_folding_disabled = 0
+let g:vim_markdown_auto_insert_bullets = 1
+let g:vim_markdown_new_list_item_indent = 2
 au FileType markdown setlocal wrap linebreak textwidth=72 nolist autoindent
 
 " Override filetypes
