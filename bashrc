@@ -284,8 +284,8 @@ if [[ -n "$PS1" ]] ; then
   GIT_PS1_SHOWUPSTREAM="auto"
   GIT_PS1_SHOWSTASHSTATE=1
 
-  # If terraform is installed add to path
-  if [ -e /jcdata-source/terraform ]; then export PATH="$PATH:/jcdata-source/terraform"; fi
+  # If tfv is installed add to path
+  if [[ -d "$HOME/.tfenv" ]]; then export PATH="$HOME/.tfenv/bin:$PATH"; fi
 
   # tfenv
   [ -d "${HOME}/.tfenv/bin" ] && export PATH="$HOME/.tfenv/bin:$PATH"
