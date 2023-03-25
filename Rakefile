@@ -21,6 +21,7 @@ SYMLINK_WHITELIST = {
   'vimrc': nil,
 
   # dir
+  'bash_aliases.d': nil,
   'bash_completion.d': nil,
   'bin': 'bin', # dir, no name change
   'vim': nil,
