@@ -18,12 +18,14 @@ for region in "${REGIONS[@]}"; do
   echo "  ... ${region}"
   # shellcheck disable=SC2016
   aws \
-    --output json ec2 describe-instances \
+    --profile "${AWS_PROFILE:-default}" \
     --region "${region}" \
-    --query 'Reservations[*].Instances[*].[Tags[?Key==`Name`].Value[], PrivateIpAddress]' \
-    | jq '.[][] | "\(.[1]) \(.[0][0])"' \
-    | sed 's/^"//' | sed 's/"$//' \
-    | sudo tee --append "${HOSTS_AWS_FILE}" > /dev/null
+    --output json ec2 \
+    describe-instances \
+      --query 'Reservations[*].Instances[*].[Tags[?Key==`Name`].Value[], PrivateIpAddress]' \
+      | jq '.[][] | "\(.[1]) \(.[0][0])"' \
+      | sed 's/^"//' | sed 's/"$//' \
+      | sudo tee --append "${HOSTS_AWS_FILE}" > /dev/null
 done
 
 # Sort the file and make some markers
