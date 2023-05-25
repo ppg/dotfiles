@@ -28,3 +28,6 @@
 [submodule "vim/pack/ppgengler/start/black"]
 	path = vim/pack/ppgengler/start/black
 	url = https://github.com/psf/black.git
+[submodule "vim/pack/ppgengler/start/vim-github-support"]
+	path = vim/pack/ppgengler/start/vim-github-support
+	url = git@github.com:rhysd/vim-github-support.git
