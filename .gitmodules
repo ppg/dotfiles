@@ -22,9 +22,6 @@
 [submodule "vim/pack/ppgengler/start/vim-ginkgo"]
 	path = vim/pack/ppgengler/start/vim-ginkgo
 	url = https://github.com/ivy/vim-ginkgo.git
-[submodule "vim/pack/ppgengler/start/syntastic"]
-	path = vim/pack/ppgengler/start/syntastic
-	url = https://github.com/vim-syntastic/syntastic.git
 [submodule "vim/pack/ppgengler/start/black"]
 	path = vim/pack/ppgengler/start/black
 	url = https://github.com/psf/black.git
