@@ -28,18 +28,40 @@ linters-settings:
     shadow:
       strict: true
   revive:
-    # missing a lot of config to do this
-    #enable-all-rules: true
+    ignore-generated-header: true
+    # https://golangci-lint.run/usage/linters/#revive
+    # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#exported
     rules:
-      # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#exported
+      - name: blank-imports
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: dot-imports
+      - name: empty-block
+      - name: error-naming
+      - name: error-return
+      - name: error-strings
+      - name: errorf
       - name: exported
-        severity: warning
-        disabled: false
         arguments:
           - "checkPrivateReceivers"
           - "sayRepetitiveInsteadOfStutters"
+      - name: if-return
+      - name: increment-decrement
+      - name: indent-error-flow
+      - name: line-length-limit
+        arguments: [88]
+      #- name: package-comments
+      - name: range
+      - name: receiver-naming
+      - name: redefines-builtin-id
+      - name: superfluous-else
+      - name: time-naming
+      - name: unexported-return
+      - name: unreachable-code
+      - name: unused-parameter
+      - name: var-declaration
+      - name: var-naming
 
 issues:
-  # The list of ids of default excludes to include or disable.
-  include:
-    - EXC0002 # disable excluding of issues about comments from golint
+  # See https://github.com/golangci/golangci-lint/issues/928
+  exclude-use-default: false
