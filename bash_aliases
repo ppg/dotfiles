@@ -43,7 +43,9 @@ alias printcas="awk -v cmd='openssl x509 -noout -subject' ' /BEGIN/{close(cmd)};
 readonly conf_dir=~/.bash_aliases.d
 if [[ -d "${conf_dir}" ]]; then
   for file in "${conf_dir}"/*; do
-    # shellcheck disable=SC1090
-    source "${file}"
+    if [[ -f "${file}" ]]; then
+      # shellcheck disable=SC1090
+      source "${file}"
+    fi
   done
 fi
