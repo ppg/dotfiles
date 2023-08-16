@@ -39,12 +39,13 @@ alias cleantxt=$'sed \'s/\x1B[@A-Z\\\]^_]\|\x1B\[[0-9:;<=>?]*[-!"#$%&\'"\'"\'()*
 # Prints the CAs registered on a system
 alias printcas="awk -v cmd='openssl x509 -noout -subject' ' /BEGIN/{close(cmd)};{print | cmd}' < /etc/ssl/certs/ca-certificates.crt"
 
-export HOME=/home/ppgengler
-export LDAP_USERNAME=ppgengler
-
 # Go through per-job aliases
 readonly conf_dir=~/.bash_aliases.d
-for file in "${conf_dir}"/*; do
-  # shellcheck disable=SC1090
-  source "${file}"
-done
+if [[ -d "${conf_dir}" ]]; then
+  for file in "${conf_dir}"/*; do
+    if [[ -f "${file}" ]]; then
+      # shellcheck disable=SC1090
+      source "${file}"
+    fi
+  done
+fi

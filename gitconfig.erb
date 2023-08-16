@@ -107,8 +107,6 @@
   command = /bin/true
 [difftool]
   prompt = false
-[mergetool]
-  prompt = false
 <% unless diffmerge_path.empty? -%>
 [difftool "diffmerge"]
   cmd = <%= diffmerge_path %> "$LOCAL" "$REMOTE"
@@ -132,6 +130,9 @@
   tool = <%= default_tool %>
   guitool = <%= default_tool %>
   wsErrorHighlight = all
+[mergetool]
+  prompt = false
+  hideResolved = true
 <% unless diffmerge_path.empty? -%>
 [mergetool "diffmerge"]
   cmd = <%= diffmerge_path %> --merge --result="$MERGED" "$LOCAL" "$BASE" "$REMOTE"
@@ -140,6 +141,9 @@
 <% unless meld_path.empty? -%>
 [mergetool "meld"]
   path = <%= meld_path %>
+  # hideResolved doesn't work for meld, so turn off and use meld's auto-merge
+  hideResolved = false
+  useAutoMerge = auto
 <% end -%>
 <% unless opendiff_path.empty? -%>
 [mergetool "opendiff"]
