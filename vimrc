@@ -80,7 +80,8 @@ set statusline+=%h%w%m%r%y                                          " help, prev
 set statusline+=\ -\ %{fugitive#statusline()}                       " Add in git information from fugitive
 set statusline+=\ -\ %{exists('g:loaded_rvm')?rvm#statusline():''}  " Add in rvm ruby version
 set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}                        " Add in syntastic warnings
+" TODO(ppg): figure out for ALE
+"set statusline+=%{SyntasticStatuslineFlag()}                        " Add in syntastic warnings
 set statusline+=%*
 set statusline+=%=[\%05b\:0x\%04B]\ %-16(\ %l,%c\ %)                " byte value, byte value (hex), line number, column number
 set statusline+=%L/%P                                               " total lines, percentage of file
@@ -120,6 +121,21 @@ autocmd FileType cucumber setlocal spell
 autocmd FileType gitcommit setlocal spell
 autocmd FileType markdown setlocal spell
 autocmd FileType text setlocal spell
+
+" ALE
+" https://github.com/dense-analysis/ale#how-can-i-disable-virtual-text-appearing-at-ends-of-lines
+let g:ale_virtualtext_cursor = 'disabled'
+" https://github.com/dense-analysis/ale#how-can-i-use-the-quickfix-list-instead-of-the-loclist
+"let g:ale_set_loclist = 0
+"let g:ale_set_quickfix = 1
+" https://github.com/dense-analysis/ale#how-can-i-change-the-format-for-echo-messages
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%] %[code]%'
+let g:ale_linters = {
+\   'proto': ['buf-lint'],
+\   'go': ['gofmt', 'golangci-lint', 'gopls', 'govet'],
+\}
 
 " SYNTASTIC
 let g:syntastic_aggregate_errors = 1
@@ -163,24 +179,11 @@ autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 " https://github.com/fatih/vim-go/wiki/Tutorial#identifier-resolution
 " autocmd FileType go nmap <Leader>i <Plug>(go-info)
 let g:go_build_tags = "acceptance benchmark functional integration client_test"
-let g:go_fmt_fail_silently = 1 " let syntastic show compile errors instead of opening location list
-" Go Syntastic
-" TODO(ppg): disable golint when
-" https://github.com/golangci/golangci-lint/issues/928 is fully fixed
-let g:syntastic_go_checkers = ['go', 'gofmt', 'golint', 'golangci_lint']
-let g:syntastic_go_go_test_args = "-tags 'acceptance benchmark functional integration client_test'"
-let g:syntastic_go_go_build_args = "-tags 'acceptance benchmark functional integration client_test'"
-" TODO(ppg): why can't I get govet with the makeprgBuild to work?
-"let g:syntastic_go_govet_exe = "go tool vet"
-" < go1.12
-"let g:syntastic_go_govet_args = "-all -shadow -tags 'acceptance benchmark functional integration devci'"
-"let g:syntastic_go_govet_args = "-vettool=$(which shadow) -tags 'benchmark functional integration devci'"
-" When entering a golangci_lint set the fname to the current directory so it compiles
-"   see https://vim.fandom.com/wiki/Set_working_directory_to_the_current_file
-autocmd BufEnter *.go silent! let g:syntastic_go_golangci_lint_fname = shellescape(expand("%:p:h", 1))
-let g:syntastic_go_golangci_lint_args = "--build-tags 'acceptance benchmark functional integration devci client_test'"
-"let g:syntastic_go_golangci_lint_defaults = {'type': 'w'}
-let g:syntastic_go_golangci_lint_type = 'w'
+let g:go_fmt_fail_silently = 1 " let ALE show compile errors instead of opening location list
+" Go Linting
+let g:ale_go_golangci_lint_package = 1
+" disable --enable-all default to defer to local .golangci.yml file
+let g:ale_go_golangci_lint_options = ''
 " Go - ginkgo
 autocmd BufNewFile,BufReadPost *_test.go set filetype=ginkgo.go
 
@@ -206,7 +209,7 @@ autocmd BufRead,BufNewFile *.py set textwidth=88
 " waiting on https://github.com/psf/black/pull/1733 to be released
 " workaround: https://github.com/psf/black/issues/252
 "autocmd BufWritePre *.py silent! execute ':Black'
-autocmd BufWritePre *.py execute ':Isort'
+" autocmd BufWritePre *.py execute ':Isort'
 "" TODO(ppg): try to get this working
 "" Enable python-language-server
 "if executable('pyls')
@@ -222,8 +225,8 @@ autocmd BufWritePre *.py execute ':Isort'
 au BufRead,BufNewFile *.jinja set filetype=jinja2
 
 "" Shell
-let g:syntastic_sh_shellcheck_args = "--external-sources"
-let g:syntastic_sh_checkers = ['sh', 'shellcheck']
+let g:ale_sh_shellcheck_change_directory=0
+let g:ale_sh_shellcheck_options='--external-sources'
 
 " API Blueprint
 " Fix ctrl-b to be back still
