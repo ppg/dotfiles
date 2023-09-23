@@ -78,11 +78,32 @@ set statusline=[%n]\                                                " Buffer num
 set statusline+=%<%.99f\                                            " File name (relative to current path)
 set statusline+=%h%w%m%r%y                                          " help, preview, modified, readonly, filetype
 set statusline+=\ -\ %{fugitive#statusline()}                       " Add in git information from fugitive
-set statusline+=\ -\ %{exists('g:loaded_rvm')?rvm#statusline():''}  " Add in rvm ruby version
-set statusline+=%#warningmsg#
-" TODO(ppg): figure out for ALE
-"set statusline+=%{SyntasticStatuslineFlag()}                        " Add in syntastic warnings
-set statusline+=%*
+" ALE Status Line
+" https://github.com/dense-analysis/ale#custom-statusline
+function! ALEStatuslineHelper(type, colored) abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  if a:type == 'warnings'
+    let l:count = l:counts.total - (l:counts.error + l:counts.style_error)
+    let l:label = 'W'
+  elseif a:type == 'errors'
+    let l:count = l:counts.error + l:counts.style_error
+    let l:label = 'E'
+  endif
+  "if (l:warnings == 0 && !a:colored) || (l:warnings != 0 && a:colored)
+  if (!l:count && !a:colored) || (l:count && a:colored)
+    return printf('%d%s', l:count, l:label)
+  else
+    return ''
+  endif
+endfunction
+set statusline+=\ -\ [
+set statusline+=%{ALEStatuslineHelper('warnings',0)}
+set statusline+=%#ALEWarningSign#%{ALEStatuslineHelper('warnings',1)}%*
+set statusline+=\ " space
+set statusline+=%{ALEStatuslineHelper('errors',0)}
+set statusline+=%#ALEWarningSign#%{ALEStatuslineHelper('errors',1)}%*
+set statusline+=]
+" END: ALE Status Line
 set statusline+=%=[\%05b\:0x\%04B]\ %-16(\ %l,%c\ %)                " byte value, byte value (hex), line number, column number
 set statusline+=%L/%P                                               " total lines, percentage of file
 
@@ -137,23 +158,6 @@ let g:ale_linters = {
 \   'go': ['gofmt', 'golangci-lint', 'gopls', 'govet'],
 \}
 
-" SYNTASTIC
-let g:syntastic_aggregate_errors = 1
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_jump = 0
-let g:syntastic_auto_loc_list = 0
-" Leave disabled, see https://github.com/vim-syntastic/syntastic/issues/2238
-"let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_mode_map = { 'mode': 'active' } ", 'passive_filetypes': ['go'] }
-" Potentially enable to make vim saving go faster, but might skip go checking
-" unless forced
-"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-" DEBUG
-"let g:syntastic_debug=1
-"let g:syntastic_debug=3
-"let g:syntastic_debug=33
-
 " Ruby
 let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 let g:syntastic_ruby_rubocop_args = '--display-cop-names --display-style-guide'
@@ -188,15 +192,6 @@ let g:ale_go_golangci_lint_options = ''
 autocmd BufNewFile,BufReadPost *_test.go set filetype=ginkgo.go
 
 " JavaScript
-"let g:syntastic_javascript_checkers = ['jshint', 'eslint']
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_javascript_eslint_exe = 'npx eslint'
-" TODO(ppg): don't use ctrl-f, use for forward by page
-"autocmd FileType javascript vnoremap <buffer> <c-f> :call RangeJsBeautify()<cr>
-"autocmd FileType json vnoremap <buffer> <c-f> :call RangeJsonBeautify()<cr>
-"autocmd FileType jsx vnoremap <buffer> <c-f> :call RangeJsxBeautify()<cr>
-"autocmd FileType html vnoremap <buffer> <c-f> :call RangeHtmlBeautify()<cr>
-"autocmd FileType css vnoremap <buffer> <c-f> :call RangeCSSBeautify()<cr>
 
 " Python
 let g:black_quiet = 1
