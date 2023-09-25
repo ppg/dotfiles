@@ -8,7 +8,6 @@
 # Changed for rvm
 #[ -z "$PS1" ] && return
 if [[ -n "$PS1" ]] ; then
-
   # append to the history file, don't overwrite it
   shopt -s histappend
 
@@ -43,7 +42,6 @@ if [[ -n "$PS1" ]] ; then
   bind '"\e[B": history-search-forward'
   bind '"\e[C": forward-char'
   bind '"\e[D": backward-char'
-
 
   # check the window size after each command and, if necessary,
   # update the values of LINES and COLUMNS.
@@ -131,6 +129,8 @@ if [[ -n "$PS1" ]] ; then
   fi
 
   # Restore default behavior for Gnome >= 3.8
+  # script may not exist, that's why we test
+  # shellcheck disable=SC1091
   if [ -f /etc/profile.d/vte.sh ]; then . /etc/profile.d/vte.sh; fi
 
   # NOTE: bash completion must be before things like the git prompt setup
@@ -146,21 +146,25 @@ if [[ -n "$PS1" ]] ; then
 
   # https://docs.brew.sh/Shell-Completion
   if type brew 2&>/dev/null; then
-    for COMPLETION in $(brew --prefix)/etc/bash_completion.d/*
-    do
+    for COMPLETION in "$(brew --prefix)/etc/bash_completion.d"/*; do
+      # don't follow 3rd party scripts
+      # shellcheck disable=SC1090
       [[ -f $COMPLETION ]] && source "$COMPLETION"
     done
-    if [[ -f $(brew --prefix)/etc/profile.d/bash_completion.sh ]];
-    then
+    if [[ -f $(brew --prefix)/etc/profile.d/bash_completion.sh ]]; then
+      # script may not exist, that's why we test
+      # shellcheck disable=SC1091
       source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
     fi
     # TODO(ppg); how do do this on OSX in 'normal' way?
-    for COMPLETION in ~/.bash_completion.d/*
-    do
+    for COMPLETION in ~/.bash_completion.d/*; do
+      # don't follow 3rd party scripts
+      # shellcheck disable=SC1090
       [[ -f $COMPLETION ]] && source "$COMPLETION"
     done
-    for COMPLETION in ~/.bash_completion.d/darwin/*
-    do
+    for COMPLETION in ~/.bash_completion.d/darwin/*; do
+      # don't follow 3rd party scripts
+      # shellcheck disable=SC1090
       [[ -f $COMPLETION ]] && source "$COMPLETION"
     done
   fi
@@ -178,7 +182,9 @@ if [[ -n "$PS1" ]] ; then
   [ -d /usr/local/go/bin ] && export PATH=$PATH:/usr/local/go/bin
   export GOPATH=$HOME/go
   [[ -d "${GOPATH}/bin" ]] && export PATH=$PATH:$GOPATH/bin
-  # Enable golangci-lint bash completiong if installed
+
+  # don't follow 3rd party scripts
+  # shellcheck disable=SC1090
   if command -v golangci-lint &> /dev/null; then source <(golangci-lint completion bash); fi
 
   # FIXME: plenv shims configure and messes up nokogiri; disable until its been troublshot
@@ -197,31 +203,40 @@ if [[ -n "$PS1" ]] ; then
   # Setup nvm and avn
   export NVM_DIR=~/.nvm
   if [ -s "$NVM_DIR/nvm.sh" ]; then # Linux
+    # script may not exist, that's why we test
+    # shellcheck disable=SC1091
     source "$NVM_DIR/nvm.sh"
   elif which brew &> /dev/null && brew ls --versions nvm &> /dev/null; then # OSX
-    source $(brew --prefix nvm)/nvm.sh
+    # script may not exist, that's why we test
+    # shellcheck disable=SC1091
+    source "$(brew --prefix nvm)/nvm.sh"
   fi
   [[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion
+  # script may not exist, that's why we test
+  # shellcheck disable=SC1091
   [[ -s "$HOME/.avn/bin/avn.sh" ]] && source "$HOME/.avn/bin/avn.sh" # load avn
 
   # Try to setup RVM first
-  if [ -s "$HOME/.rvm/scripts/rvm" ]; then
+  if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
+    # script may not exist, that's why we test
+    # shellcheck disable=SC1091
     source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
     # TODO: Add in system-wide rvm check next
   # Setup rbenv
   elif which rbenv &> /dev/null; then
     eval "$(rbenv init -)"
-  elif [ -d "$HOME/.rbenv/bin" ]; then
+  elif [[ -d "$HOME/.rbenv/bin" ]]; then
     export PATH="$HOME/.rbenv/bin:$PATH"
     export RBENV_ROOT="$HOME/.rbenv"
     eval "$(rbenv init -)"
-  elif [ -d /usr/local/var/rbenv ]; then
+  elif [[ -d /usr/local/var/rbenv ]]; then
     export RBENV_ROOT=/usr/local/var/rbenv
     eval "$(rbenv init -)"
   fi
 
   # If hub is installed, use over git
-  if which hub &> /dev/null; then eval "$(hub alias -s)"; fi
+  # TODO(ppg): evaluate if this is worth maintaining or just gh?
+  #if which hub &> /dev/null; then eval "$(hub alias -s)"; fi
 
   # Set our prompt to have RVM and GIT information
   RED="\[\033[0;31m\]"
@@ -268,6 +283,7 @@ if [[ -n "$PS1" ]] ; then
   else
     PS1_PERL=""
   fi
+
   # If we have __git_ps1 then add in that information
   if type __git_ps1 >/dev/null 2>&1; then
     PS1_GIT="\$(__git_ps1 ' (%s)')"
@@ -292,22 +308,20 @@ if [[ -n "$PS1" ]] ; then
 
   # Export EC2 stuff
   export EC2_HOME=$HOME/ec2-api-tools-1.3-57419
-  [ -f $EC2_HOME/bin ] && export PATH=$PATH:$EC2_HOME/bin
+  [[ -f "$EC2_HOME/bin" ]] && export PATH=$PATH:$EC2_HOME/bin
   export EC2_PRIVATE_KEY=$HOME/.ec2/pk-$KEY_ID.pem
   export EC2_CERT=$HOME/.ec2/cert-$KEY_ID.pem
   export JAVA_HOME=/usr/lib/jvm/java-6-openjdk/
 
   # Setup GCE tools
-  [ -f "$HOME/google-cloud-sdk/path.bash.inc" ] && source "$HOME/google-cloud-sdk/path.bash.inc"
-  [ -f "$HOME/google-cloud-sdk/completion.bash.inc" ] && source "$HOME/google-cloud-sdk/completion.bash.inc"
-  if which kubectl > /dev/null; then source <(kubectl completion bash); fi
+  # TODO(ppg): these are slow
+  #[ -f "$HOME/google-cloud-sdk/path.bash.inc" ] && source "$HOME/google-cloud-sdk/path.bash.inc"
+  #[ -f "$HOME/google-cloud-sdk/completion.bash.inc" ] && source "$HOME/google-cloud-sdk/completion.bash.inc"
+  #if which kubectl > /dev/null; then source <(kubectl completion bash); fi
 
   # Setup ROS if present
   [ -f /opt/ros/jade/setup.bash ] && source /opt/ros/jade/setup.bash
   [ -f ./devel/setup.bash ] && source ./devel/setup.bash
-
-  # Setup travis CLI bash extensions if present
-  [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
 
   # Set DOCKER_SSH_AUTH_SOCK to allow OSX to set this to the magic socket that
   # works with docker for mac.
