@@ -158,6 +158,12 @@ let g:ale_linters = {
 \   'go': ['gofmt', 'golangci-lint', 'gopls', 'govet'],
 \}
 
+" Map bracket e|E to move between errors
+:nmap ]e :ALENextWrap<CR>
+:nmap [e :ALEPreviousWrap<CR>
+:nmap ]E :ALELast
+:nmap [E :ALEFirst
+
 " Ruby
 let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 let g:syntastic_ruby_rubocop_args = '--display-cop-names --display-style-guide'
