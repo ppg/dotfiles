@@ -24,9 +24,12 @@ fi
 # sudo apt-get install python-pygments python3-pygments
 alias catc='pygmentize -g'
 
+alias dps='docker ps --format "table {{.Names}}\t{{.Status}}"'
 alias dc='docker compose'
+alias dcps='docker compose ps --format "table {{.Names}}\t{{.Status}}"'
 alias dcl='docker-compose'
 alias dcci='docker compose --file docker-compose.ci.yml'
+alias dccips='docker compose ps --format "table {{.Names}}\t{{.Status}}"'
 alias dccil='docker-compose --file docker-compose.ci.yml'
 
 # get dns on ubuntu
