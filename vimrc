@@ -153,9 +153,11 @@ let g:ale_virtualtext_cursor = 'disabled'
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%] %[code]%'
+let g:ale_fix_on_save = 1
+let g:ale_fixers = {}
 let g:ale_linters = {
-\   'proto': ['buf-lint'],
 \   'go': ['gofmt', 'golangci-lint', 'gopls', 'govet'],
+\   'proto': ['buf-lint'],
 \}
 
 " Map bracket e|E to move between errors
@@ -200,11 +202,12 @@ autocmd BufNewFile,BufReadPost *_test.go set filetype=ginkgo.go
 " JavaScript
 
 " Python
+" https://github.com/dense-analysis/ale/blob/v3.3.0/doc/ale-python.txt#L14-L20
+let g:ale_python_auto_poetry = 1
+" https://black.readthedocs.io/en/stable/integrations/editors.html#with-ale
+let g:ale_fixers.python = ['black']
 let g:black_quiet = 1
-"let g:syntastic_python_python_exec = 'python'
-"let g:syntastic_python_flake8_exec = 'python'
-"let g:syntastic_python_flake8_args = ['-m', 'flake8']
-let g:syntastic_python_checkers = ['python', 'flake8', 'pylint', 'mypy']
+
 "let g:vim_isort_python_version = 'python'
 autocmd BufRead,BufNewFile *.py set textwidth=88
 " waiting on https://github.com/psf/black/pull/1733 to be released
