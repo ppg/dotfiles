@@ -39,8 +39,10 @@ alias dnsinfo='nmcli device show wlp4s0 | grep IP4.DNS'
 alias cleantxt=$'sed \'s/\x1B[@A-Z\\\]^_]\|\x1B\[[0-9:;<=>?]*[-!"#$%&\'"\'"\'()*+,.\/]*[][\\@A-Z^_`a-z{|}~]|
 //g\''
 
-# Prints the CAs registered on a system
-alias printcas="awk -v cmd='openssl x509 -noout -subject' ' /BEGIN/{close(cmd)};{print | cmd}' < /etc/ssl/certs/ca-certificates.crt"
+# Prints the CAs from a crt fileregistered on a system
+#   print_cert_subjects < /etc/ssl/certs/ca-certificates.crt
+alias print_cert_subjects="awk -v cmd='openssl x509 -noout -subject' ' /BEGIN/{close(cmd)};{print | cmd}'"
+alias printcas="print_cert_subjects < /etc/ssl/certs/ca-certificates.crt"
 
 # Go through per-job aliases
 readonly conf_dir=~/.bash_aliases.d
