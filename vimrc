@@ -193,9 +193,12 @@ autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 let g:go_build_tags = "acceptance benchmark functional integration client_test"
 let g:go_fmt_fail_silently = 1 " let ALE show compile errors instead of opening location list
 " Go Linting
+let g:ale_go_gobuild_options = "-tags 'acceptance benchmark functional integration client_test'"
+let g:ale_go_gofmt_options = "-tags 'acceptance benchmark functional integration client_test'"
 let g:ale_go_golangci_lint_package = 1
 " disable --enable-all default to defer to local .golangci.yml file
-let g:ale_go_golangci_lint_options = ''
+let g:ale_go_golangci_lint_options = "--build-tags 'acceptance benchmark functional integration devci client_test'"
+let g:ale_go_govet_options = "-tags 'acceptance benchmark functional integration client_test'"
 " Go - ginkgo
 autocmd BufNewFile,BufReadPost *_test.go set filetype=ginkgo.go
 
