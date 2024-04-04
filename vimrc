@@ -163,8 +163,12 @@ let g:ale_linters = {
 " Map bracket e|E to move between errors
 :nmap ]e :ALENextWrap<CR>
 :nmap [e :ALEPreviousWrap<CR>
-:nmap ]E :ALELast
-:nmap [E :ALEFirst
+:nmap ]E :ALELast<CR>
+:nmap [E :ALEFirst<CR>
+" map for cnext and cprevious
+" FIXME(ppg): should :lnext and :lprevious be ALENext and ALEPrevious?
+nnoremap <silent> <leader>] :lnext<CR>
+nnoremap <silent> <leader>[ :lprevious<CR>
 
 " Copilot
 :imap <silent> <C-j> <Plug>(copilot-next)
@@ -278,10 +282,6 @@ au BufRead,BufNewFile *.ino set filetype=cpp
 
 " Nginx
 au BufRead,BufNewFile */nginx/conf.d/* set ft=nginx
-
-" map for cnext and cprevious
-nnoremap <silent> <leader>] :lnext<CR>
-nnoremap <silent> <leader>[ :lprevious<CR>
 
 " Define common tabularizations
 if exists(":Tabularize")
