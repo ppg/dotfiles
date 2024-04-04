@@ -166,6 +166,13 @@ let g:ale_linters = {
 :nmap ]E :ALELast
 :nmap [E :ALEFirst
 
+" Copilot
+:imap <silent> <C-j> <Plug>(copilot-next)
+:imap <silent> <C-k> <Plug>(copilot-previous)
+:imap <silent> <C-\> <Plug>(copilot-dismiss)
+" FIXME(ppg): how to adjust the colors here?
+autocmd ColorScheme solarized highlight CopilotSuggestion guifg=#555500 ctermfg=5 guibg=#073642 ctermbg=0
+
 " Ruby
 let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 let g:syntastic_ruby_rubocop_args = '--display-cop-names --display-style-guide'
