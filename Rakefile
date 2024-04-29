@@ -18,6 +18,7 @@ SYMLINK_WHITELIST = {
   'irbrc': nil,
   'railsrc': nil,
   'screenrc': nil,
+  'shellcheckrc': nil,
   'vimrc': nil,
 
   # dir
