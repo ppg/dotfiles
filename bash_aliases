@@ -45,7 +45,7 @@ alias print_cert_subjects="awk -v cmd='openssl x509 -noout -subject' ' /BEGIN/{c
 alias printcas="print_cert_subjects < /etc/ssl/certs/ca-certificates.crt"
 
 # Go through per-job aliases
-readonly conf_dir=~/.bash_aliases.d
+conf_dir=~/.bash_aliases.d
 if [[ -d "${conf_dir}" ]]; then
   for file in "${conf_dir}"/*; do
     if [[ -f "${file}" ]]; then

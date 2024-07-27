@@ -13,8 +13,8 @@ if [[ -z "${profile}" ]]; then
 fi
 shift
 
-readonly conf_dir=~/bin/aws-queues.d
-readonly conf_file="${conf_dir}/${profile}"
+conf_dir=~/bin/aws-queues.d
+conf_file="${conf_dir}/${profile}"
 if [[ ! -f "${conf_file}" ]]; then
   echo "ERROR: cannot find profile: ${profile}"
   echo "Please add ${conf_file}"
