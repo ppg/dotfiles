@@ -144,6 +144,11 @@ if [[ -n "$PS1" ]] ; then
     fi
   fi
 
+  # Linux homebrew
+  if [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  fi
+
   # https://docs.brew.sh/Shell-Completion
   if type brew 2&>/dev/null; then
     for COMPLETION in "$(brew --prefix)/etc/bash_completion.d"/*; do
