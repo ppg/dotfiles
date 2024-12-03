@@ -327,10 +327,4 @@ if [[ -n "$PS1" ]] ; then
   # Setup ROS if present
   [ -f /opt/ros/jade/setup.bash ] && source /opt/ros/jade/setup.bash
   [ -f ./devel/setup.bash ] && source ./devel/setup.bash
-
-  # Set DOCKER_SSH_AUTH_SOCK to allow OSX to set this to the magic socket that
-  # works with docker for mac.
-  #echo 'export DOCKER_SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock' >> ~/.bash_profile"
-  export DOCKER_SSH_AUTH_SOCK="${SSH_AUTH_SOCK}"
-
 fi # if [[ -n "$PS1" ]]; then
