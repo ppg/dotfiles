@@ -171,6 +171,7 @@ nnoremap <silent> <leader>] :lnext<CR>
 nnoremap <silent> <leader>[ :lprevious<CR>
 
 " Copilot
+packadd! copilot.vim
 :imap <silent> <C-j> <Plug>(copilot-next)
 :imap <silent> <C-k> <Plug>(copilot-previous)
 :imap <silent> <C-\> <Plug>(copilot-dismiss)
