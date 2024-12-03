@@ -63,8 +63,14 @@
   #   git copr <remote> <pr#>
   copr = "!f() { git fetch $1 pull/$2/head:pr-$2 && git checkout pr-$2; }; f"
 
-  # pulls the latest tag or master
-  pulllatest = "!git fetch origin; tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null); git checkout ${tag:-master}; if [ -z ${tag} ]; then git pull; fi"
+  # pulls the latest tag or the default branch tip
+  pulllatest = "!git fetch origin; \
+    tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null); \
+    default=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p'); \
+    git checkout ${tag:-${default}}; \
+    if [ -z ${tag} ]; \
+      then git pull; \
+    fi"
 
   #release-notes = "!sh -c 'git log $(git describe --tags --abbrev=0) --no-merges --not master | format_release_notes.rb' -"
 
@@ -73,7 +79,11 @@
 
   # file-on-branches
   #   git file-on-branches
-  file-on-branches = "!f() { git log --all --format=%H $1 | while read f; do git branch --contains $f; done | sort -u;  }; f"
+  file-on-branches = "!f() { \
+      git log --all --format=%H $1 | while read f; do \
+        git branch --contains $f; \
+      done | sort -u; \
+    }; f"
 
 [branch]
   autosetupmerge = true
