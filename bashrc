@@ -206,61 +206,13 @@ if [[ -n "$PS1" ]] ; then
   export PATH="$HOME/.poetry/bin:$PATH"
 
   # Setup nvm
-  export NVM_DIR=~/.nvm
-  if [ -s "$NVM_DIR/nvm.sh" ]; then # Linux
-    # script may not exist, that's why we test
-    # shellcheck disable=SC1091
-    source "$NVM_DIR/nvm.sh"
-  elif command -v brew &> /dev/null && brew ls --versions nvm &> /dev/null; then # OSX
-    # script may not exist, that's why we test
-    # shellcheck disable=SC1091
-    source "$(brew --prefix nvm)/nvm.sh"
-  fi
+  export NVM_DIR="$HOME/.nvm"
   # script may not exist, that's why we test
   # shellcheck disable=SC1091
-  [[ -r $NVM_DIR/bash_completion ]] && source "$NVM_DIR/bash_completion"
-  cdnvm() {
-    command cd "$@" || return $?
-    nvm_path="$(nvm_find_up .nvmrc | command tr -d '\n')"
-
-    # If there are no .nvmrc file, use the default nvm version
-    if [[ ! $nvm_path = *[^[:space:]]* ]]; then
-
-      declare default_version
-      default_version="$(nvm version default)"
-
-        # If there is no default version, set it to `node`
-        # This will use the latest version on your machine
-        if [ "$default_version" = 'N/A' ]; then
-          nvm alias default node
-          default_version=$(nvm version default)
-        fi
-
-        # If the current version is not the default version, set it to use the default version
-        if [ "$(nvm current)" != "${default_version}" ]; then
-          nvm use default
-        fi
-      elif [[ -s "${nvm_path}/.nvmrc" && -r "${nvm_path}/.nvmrc" ]]; then
-        declare nvm_version
-        nvm_version=$(<"${nvm_path}"/.nvmrc)
-
-        declare locally_resolved_nvm_version
-        # `nvm ls` will check all locally-available versions
-        # If there are multiple matching versions, take the latest one
-        # Remove the `->` and `*` characters and spaces
-        # `locally_resolved_nvm_version` will be `N/A` if no local versions are found
-        locally_resolved_nvm_version=$(nvm ls --no-colors "${nvm_version}" | command tail -1 | command tr -d '\->*' | command tr -d '[:space:]')
-
-        # If it is not already installed, install it
-        # `nvm install` will implicitly use the newly-installed version
-        if [ "${locally_resolved_nvm_version}" = 'N/A' ]; then
-          nvm install "${nvm_version}";
-        elif [ "$(nvm current)" != "${locally_resolved_nvm_version}" ]; then
-          nvm use "${nvm_version}";
-        fi
-    fi
-  }
-  alias cd='cdnvm'
+  [ -s "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh" ] && \. "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh"  # This loads nvm
+  # script may not exist, that's why we test
+  # shellcheck disable=SC1091
+  [ -s "/home/linuxbrew/.linuxbrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/home/linuxbrew/.linuxbrew/opt/nvm/etc/bash_completion.d/nvm"
 
   # Try to setup RVM first
   if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
@@ -369,5 +321,3 @@ if [[ -n "$PS1" ]] ; then
   [ -f /opt/ros/jade/setup.bash ] && source /opt/ros/jade/setup.bash
   [ -f ./devel/setup.bash ] && source ./devel/setup.bash
 fi # if [[ -n "$PS1" ]]; then
-
-cdnvm "$PWD" || exit
