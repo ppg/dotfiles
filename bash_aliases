@@ -44,6 +44,7 @@ alias cleantxt=$'sed \'s/\x1B[@A-Z\\\]^_]\|\x1B\[[0-9:;<=>?]*[-!"#$%&\'"\'"\'()*
 # Prints the CAs from a crt fileregistered on a system
 #   print_cert_subjects < /etc/ssl/certs/ca-certificates.crt
 alias print_cert_subjects="awk -v cmd='openssl x509 -noout -subject' ' /BEGIN/{close(cmd)};{print | cmd}'"
+alias print_cert_issuers="awk -v cmd='openssl x509 -noout -issuer' ' /BEGIN/{close(cmd)};{print | cmd}'"
 alias printcas="print_cert_subjects < /etc/ssl/certs/ca-certificates.crt"
 
 # Go through per-job aliases
