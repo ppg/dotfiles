@@ -27,6 +27,7 @@ set backspace=indent,eol,start    " backspace through everything in insert mode
 if exists("g:enable_mvim_shift_arrow")
   let macvim_hig_shift_movement = 1 " mvim shift-arrow-keys
 endif
+
 " List chars
 set listchars=""                  " Reset the listchars
 set listchars=tab:\ \             " a tab should display as "  ", trailing whitespace as "."
@@ -38,6 +39,7 @@ set listchars+=precedes:<         " The character to show in the last column whe
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
 let g:strip_whitespace_confirm=0
+"let g:ale_fixers['*'] = ['remove_trailing_lines', 'trim_whitespace']
 
 ""
 "" Searching
@@ -155,10 +157,15 @@ let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%] %[code]%'
 let g:ale_fix_on_save = 1
 let g:ale_fixers = {}
+" Default python:
+"   \ 'python': ['flake8', 'mypy', 'pylint', 'pyright', 'ruff']
+"   - disable pyright as not configured and too noisy
 let g:ale_linters = {
-\   'go': ['gofmt', 'golangci-lint', 'gopls', 'govet'],
-\   'proto': ['buf-lint'],
+  \ 'go': ['gofmt', 'golangci-lint', 'gopls', 'govet'],
+  \ 'proto': ['buf-lint'],
+  \ 'python': ['flake8', 'mypy', 'pylint', 'ruff']
 \}
+
 
 " Map bracket e|E to move between errors
 :nmap ]e :ALENextWrap<CR>
@@ -187,6 +194,10 @@ let g:syntastic_eruby_ruby_quiet_messages = { 'regex': 'possibly useless use of 
 " Go
 " Turn on gopls
 let g:go_gopls_options = ['-remote=auto']
+" Disable the 'composites' analyzer (likely tied to 'efaceany')
+let g:ale_go_gopls_init_options = {'ui.diagnostic.analyses': {
+\ 'efaceany': v:false,
+\ }}
 " Enable for debug
 "let g:go_gopls_options = ['-remote=auto', '-logfile=auto', '-debug=:0', '-remote.debug=:0', '-rpc.trace']
 let g:go_def_mode = 'gopls'
@@ -220,7 +231,7 @@ autocmd BufNewFile,BufReadPost *_test.go set filetype=ginkgo.go
 " https://github.com/dense-analysis/ale/blob/v3.3.0/doc/ale-python.txt#L14-L20
 let g:ale_python_auto_poetry = 1
 " https://black.readthedocs.io/en/stable/integrations/editors.html#with-ale
-let g:ale_fixers.python = ['black']
+let g:ale_fixers.python = ['black', 'isort']
 let g:black_quiet = 1
 
 "let g:vim_isort_python_version = 'python'
