@@ -221,7 +221,7 @@ if [[ -n "$PS1" ]] ; then
     source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
     # TODO: Add in system-wide rvm check next
   # Setup rbenv
-  elif which rbenv &> /dev/null; then
+  elif command -v rbenv >/dev/null 2>&1; then
     eval "$(rbenv init -)"
   elif [[ -d "$HOME/.rbenv/bin" ]]; then
     export PATH="$HOME/.rbenv/bin:$PATH"
@@ -251,23 +251,29 @@ if [[ -n "$PS1" ]] ; then
     PS1_RUBY=" (ruby:\$(~/.rvm/bin/rvm-prompt))"
   elif [ -f /usr/local/rvm/bin/rvm-prompt ]; then
     PS1_RUBY=" (ruby:\$(/usr/local/rvm/bin/rvm-prompt))"
-  elif which rbenv &> /dev/null; then
+  elif command rbenv >/dev/null 2>&1; then
     PS1_RUBY=" (ruby:\$(rbenv version-name))"
   else
     PS1_RUBY=""
   fi
   # If we have nvm call use, and add in the info
-  if nvm 'current' &> /dev/null; then
+  if nvm 'current' >/dev/null 2>&1; then
     PS1_NODE=" (node:\$(nvm 'current'))"
   else
     PS1_NODE=""
   fi
   # If we have pyenv add in that information
-  if which pyenv &> /dev/null; then
+  if command -v pyenv >/dev/null 2>&1; then
     PS1_PYTHON=" (python:\$(pyenv version-name))"
   else
     PS1_PYTHON=""
   fi
+  if command -v uv >/dev/null 2>&1; then
+    PS1_UV=" (uv: \$(\$(uv python find 2>/dev/null) --version 2>/dev/null | awk '{print \$2}'))"
+  else
+    PS1_UV=""
+  fi
+
   # virtualenv and virtualenvwrapper
   if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
     export WORKON_HOME=$HOME/.virtualenvs
@@ -276,7 +282,7 @@ if [[ -n "$PS1" ]] ; then
   fi
 
   # If we have plenv add in that information
-  if which plenv &> /dev/null; then
+  if command -v plenv >/dev/null 2>&1; then
     PS1_PERL=" (perl:\$(plenv version-name))"
   else
     PS1_PERL=""
@@ -290,7 +296,7 @@ if [[ -n "$PS1" ]] ; then
   fi
 
   # Combine all the sub-parts
-  PS1="$PS1_PREFIX$PS1_RUBY$PS1_NODE$PS1_PYTHON$PS1_PERL$PS1_GIT\n\$ "
+  PS1="$PS1_PREFIX$PS1_RUBY$PS1_NODE$PS1_PYTHON$PS1_UV$PS1_PERL$PS1_GIT\n\$ "
 
   # Configure git status for __git_ps1
   GIT_PS1_SHOWDIRTYSTATE=1
