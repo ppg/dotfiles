@@ -1,67 +1,46 @@
-linters:
-  # Stabalize the linters
-  #disable-all: true
-  enable:
-    - asciicheck
-    #- bodyclose
-    - errcheck
-    #- exhaustive
-    #- exportloopref
-    - gosec
-    - gosimple
-    - govet
-    - ineffassign
-    - misspell
-    #- noctx
-    - revive
-    - rowserrcheck
-    #- scopelint
-    - sqlclosecheck
-    - staticcheck
-    - typecheck
-    #- unparam
-    - unused
-
-linters-settings:
-  govet:
-    check-shadowing: true
-    shadow:
-      strict: true
-  revive:
-    ignore-generated-header: true
-    # https://golangci-lint.run/usage/linters/#revive
-    # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#exported
-    rules:
-      - name: blank-imports
-      - name: context-as-argument
-      - name: context-keys-type
-      - name: dot-imports
-      - name: empty-block
-      - name: error-naming
-      - name: error-return
-      - name: error-strings
-      - name: errorf
-      - name: exported
-        arguments:
-          - "checkPrivateReceivers"
-          - "sayRepetitiveInsteadOfStutters"
-      - name: if-return
-      - name: increment-decrement
-      - name: indent-error-flow
-      - name: line-length-limit
-        arguments: [88]
-      #- name: package-comments
-      - name: range
-      - name: receiver-naming
-      - name: redefines-builtin-id
-      - name: superfluous-else
-      - name: time-naming
-      - name: unexported-return
-      - name: unreachable-code
-      - name: unused-parameter
-      - name: var-declaration
-      - name: var-naming
-
+version: 2
 issues:
-  # See https://github.com/golangci/golangci-lint/issues/928
-  exclude-use-default: false
+  # no max on issues
+  max-issues-per-linter: 0
+  max-same-issues: 0
+formatters:
+  enable:
+    - gofumpt
+    - goimports
+linters:
+  default: none
+  enable:
+    - govet
+    - revive  # golint replacement
+
+  settings:
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment
+    revive:
+      enable-default-rules: true
+      severity: warning
+      confidence: 0.8
+      #rules:
+      #  - name: dot-imports
+      #    arguments:
+      #      - allowedPackages:
+      #          # Allow dot imports for ginkgo and gomega patterns
+      #          - "github.com/onsi/ginkgo/v2"
+      #          - "github.com/onsi/gomega"
+      #          - "github.com/onsi/gomega/gstruct"
+      #          - "github.com/TheJumpCloud/jumpcloud-common-go/v5/testhelpers/gomega/log"
+      #          - "github.com/TheJumpCloud/jumpcloud-directory/test/helpers"
+      #          - "github.com/TheJumpCloud/jumpcloud-directory/test/helpers/ginkgo"
+      #  - name: exported
+      #    exclude:
+      #      - '*_test\.go$'
+      #      - 'test/helpers/.*\.go$'
+      #      - test/helpers/redis_server.go
+run:
+  build-tags:
+    - benchmark
+    - functional
+    - functional_benchmark
+    - integration
