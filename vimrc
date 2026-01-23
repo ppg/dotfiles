@@ -160,10 +160,11 @@ let g:ale_fixers = {}
 " Default python:
 "   \ 'python': ['flake8', 'mypy', 'pylint', 'pyright', 'ruff']
 "   - disable pyright as not configured and too noisy
+" Tell ALE to use cli2 instead of the older cli
 let g:ale_linters = {
-  \ 'go': ['gofmt', 'golangci-lint', 'gopls', 'govet'],
-  \ 'proto': ['buf-lint'],
-  \ 'python': ['flake8', 'mypy', 'pylint', 'ruff']
+\   'go': ['gofmt', 'golangci-lint', 'gopls', 'govet'],
+\   'markdown': ['markdownlint-cli2'],
+\   'python': ['flake8', 'mypy', 'pylint', 'ruff']
 \}
 
 
@@ -284,6 +285,41 @@ let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_auto_insert_bullets = 1
 let g:vim_markdown_new_list_item_indent = 2
 au FileType markdown setlocal wrap linebreak textwidth=72 nolist autoindent
+" Define the markdownlint-cli2 handler for ALE until they release their
+" support
+function! ALEMarkdownLintCli2Handler(buffer, lines) abort
+    " Logic:
+    " Group 1: Line number (digits after the first colon)
+    " Group 2: Optional column (digits after a second colon)
+    " Group 3: Rule ID
+    " Group 4: Description
+    let l:pattern = '\v^[^:]+:(\d+)%(:(\d+))?%(\s+error)?\s+(MD\d{3}\S*)\s+(.*)$'
+    let l:output = []
+
+    for l:line in a:lines
+        let l:match = matchlist(l:line, l:pattern)
+        if !empty(l:match)
+            " If match[2] is empty, the digits found were just the line number.
+            " If match[2] is NOT empty, then match[1] is line and match[2] is col.
+            let l:line_num = l:match[1] + 0
+            let l:col_num = l:match[2] != '' ? l:match[2] + 0 : 1
+
+            call add(l:output, {
+            \   'lnum': l:line_num,
+            \   'col':  l:col_num,
+            \   'text': l:match[3] . ': ' . l:match[4],
+            \   'type': 'W',
+            \})
+        endif
+    endfor
+    return l:output
+endfunction
+call ale#linter#Define('markdown', {
+\   'name': 'markdownlint-cli2',
+\   'executable': 'markdownlint-cli2',
+\   'command': 'markdownlint-cli2 %t 2>&1',
+\   'callback': 'ALEMarkdownLintCli2Handler',
+\})
 
 " Override filetypes
 au BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
