@@ -163,10 +163,10 @@ let g:ale_fixers = {}
 " Tell ALE to use cli2 instead of the older cli
 let g:ale_linters = {
 \   'go': ['gofmt', 'golangci-lint', 'gopls', 'govet'],
+\   'javascript': ['eslint'],
 \   'markdown': ['markdownlint-cli2'],
 \   'python': ['flake8', 'mypy', 'pylint', 'ruff']
 \}
-
 
 " Map bracket e|E to move between errors
 :nmap ]e :ALENextWrap<CR>
@@ -179,7 +179,7 @@ nnoremap <silent> <leader>] :lnext<CR>
 nnoremap <silent> <leader>[ :lprevious<CR>
 
 " Copilot
-packadd! copilot.vim
+"packadd! copilot.vim
 :imap <silent> <C-j> <Plug>(copilot-next)
 :imap <silent> <C-k> <Plug>(copilot-previous)
 :imap <silent> <C-\> <Plug>(copilot-dismiss)
@@ -193,12 +193,16 @@ let g:syntastic_ruby_rubocop_args = '--display-cop-names --display-style-guide'
 let g:syntastic_eruby_ruby_quiet_messages = { 'regex': 'possibly useless use of a variable in void context' }
 
 " Go
+let go_tags = ['acceptance', 'benchmark', 'client_test', 'functional', 'functional_benchmark', 'integration']
 " Turn on gopls
 let g:go_gopls_options = ['-remote=auto']
 " Disable the 'composites' analyzer (likely tied to 'efaceany')
-let g:ale_go_gopls_init_options = {'ui.diagnostic.analyses': {
-\ 'efaceany': v:false,
-\ }}
+let g:ale_go_gopls_init_options = {
+\ 'buildFlags': ['-tags=' . join(go_tags, ',')],
+\ 'ui.diagnostic.analyses': {
+\   'efaceany': v:false,
+\ }
+\ }
 " Enable for debug
 "let g:go_gopls_options = ['-remote=auto', '-logfile=auto', '-debug=:0', '-remote.debug=:0', '-rpc.trace']
 let g:go_def_mode = 'gopls'
@@ -214,15 +218,14 @@ autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
 autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 " https://github.com/fatih/vim-go/wiki/Tutorial#identifier-resolution
 " autocmd FileType go nmap <Leader>i <Plug>(go-info)
-let g:go_build_tags = "acceptance benchmark functional integration client_test"
+let g:go_build_tags = join(go_tags, ' ')
 let g:go_fmt_fail_silently = 1 " let ALE show compile errors instead of opening location list
 " Go Linting
-let g:ale_go_gobuild_options = "-tags 'acceptance benchmark functional integration client_test'"
-let g:ale_go_gofmt_options = "-tags 'acceptance benchmark functional integration client_test'"
+let g:ale_go_gobuild_options = '-tags=' . join(go_tags, ',')
 let g:ale_go_golangci_lint_package = 1
 " disable --enable-all default to defer to local .golangci.yml file
-let g:ale_go_golangci_lint_options = "--build-tags 'acceptance benchmark functional integration devci client_test'"
-let g:ale_go_govet_options = "-tags 'acceptance benchmark functional integration client_test'"
+let g:ale_go_golangci_lint_options = '--build-tags=' . join(go_tags, ',')
+let g:ale_go_govet_options = '-tags=' . join(go_tags, ',')
 " Go - ginkgo
 autocmd BufNewFile,BufReadPost *_test.go set filetype=ginkgo.go
 
