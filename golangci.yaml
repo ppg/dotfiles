@@ -18,6 +18,10 @@ linters:
       enable-all: true
       disable:
         - fieldalignment
+      settings:
+        shadow:
+          # Optional: Set to true for more aggressive detection
+          strict: true
     revive:
       enable-default-rules: true
       severity: warning
