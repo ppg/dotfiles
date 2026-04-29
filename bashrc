@@ -110,8 +110,11 @@ if [[ -n "$PS1" ]] ; then
   # Define a color helper function to colorize stderr
   color()(set -o pipefail;"$@" 2>&1>&3|sed $'s,.*,\e[31m&\e[m,'>&2)3>&1
 
+  # default to VIM for editor
+  export EDITOR=vim
 
   # some more ls aliases
+  # TODO: why not in .bash_aliases?
   alias ll='ls -alF'
   alias la='ls -A'
   alias l='ls -CF'
@@ -177,6 +180,14 @@ if [[ -n "$PS1" ]] ; then
   # Prepend local/bin for rbenv to override things like git
   # and local/sbin for homebrew
   export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+
+  # If we're on ubuntu set env vars so homebrew openssl finds them
+  if [[ -f /etc/ssl/certs/ca-certificates.crt ]]; then
+    export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+  fi
+  if [[ -d /etc/ssl/certs ]]; then
+    export SSL_CERT_DIR=/etc/ssl/certs
+  fi
 
   # Add ~/.local/bin and ~/bin if they exist
   # NOTE: should be done by ubuntu automatically; double check on osx
