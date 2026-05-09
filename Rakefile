@@ -22,6 +22,9 @@ SYMLINK_WHITELIST = {
   'shellcheckrc': nil,
   'vimrc': nil,
 
+  # neovim config
+  'config/nvim': nil,
+
   # dir
   'bash_aliases.d': nil,
   'bash_completion.d': nil,
@@ -38,7 +41,7 @@ namespace :install do
   task :files do
     puts 'installing dot files ...'
     replace_all = false
-    Dir['*'].each do |file|
+    Dir.glob('**/*').each do |file|
       # Continute unless we're symlinking this file
       next unless SYMLINK_WHITELIST.key?(file)
 
