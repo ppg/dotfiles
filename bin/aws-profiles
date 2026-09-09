@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+PROFILES=("${@}")
+if [[ "${#PROFILES[@]}" -eq 0 ]]; then
+  mapfile -t PROFILES < <(aws configure list-profiles)
+fi
+
+echo "Checking profiles... (count: ${#PROFILES[@]})"
+for PROFILE in "${PROFILES[@]}"; do
+  printf "%20s..." "$PROFILE"
+  if aws sts get-caller-identity --profile "$PROFILE" &> /dev/null; then
+    echo "VALID"
+  else
+    echo "INVALID"
+  fi
+done
