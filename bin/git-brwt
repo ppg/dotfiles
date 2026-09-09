@@ -1,0 +1,8 @@
+#!/bin/sh
+# git-brwt: Branch with worktree information
+
+GIT_BRANCH_FORMAT="%(HEAD) %(color:red)%(align:9)%(objectname:short)%(upstream:trackshort)%(end)%(color:reset) %(color:yellow)%(align:40)%(refname:short)%(end)%(color:reset)  %(contents:subject)"
+
+git worktree list --porcelain | awk '/^worktree / {wt=$2} /^branch / {sub("refs/heads/", "", $2); print wt, $2}' | while read -r path branch; do
+  git for-each-ref "refs/heads/$branch" --format="${GIT_BRANCH_FORMAT}%0a            %(color:cyan)[$path]%(color:reset)"
+done

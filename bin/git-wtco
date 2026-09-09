@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Exit immediately if no branch name is provided
+if [ -z "$1" ]; then
+  echo "Usage: git wtco <branch-name>"
+  exit 1
+fi
+
+BRANCH_NAME="$1"
+WT_PATH=".worktrees/$BRANCH_NAME"
+
+# 1. Check if the worktree directory already exists
+if [ -d "$WT_PATH" ]; then
+  echo "Target worktree directory already exists. Moving into $WT_PATH..."
+  pushd "$WT_PATH" || exit 1
+  # Note: Changes directory only for the subshell execution. See alias solution below.
+elif git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+  # Local branch already exists - attach the worktree to it directly instead
+  # of trying (and failing) to create a new branch of the same name.
+  echo "Local branch '$BRANCH_NAME' already exists. Creating worktree for it..."
+
+  if git worktree add "$WT_PATH" "$BRANCH_NAME"; then
+    pushd "$WT_PATH" || exit 1
+  else
+    echo "Error: Failed to create worktree."
+    exit 1
+  fi
+else
+  echo "Creating new worktree for $BRANCH_NAME tracking origin/$BRANCH_NAME..."
+
+  # 2. Create the worktree, create local branch, and tie to upstream
+  if git worktree add -b "$BRANCH_NAME" "$WT_PATH" "origin/$BRANCH_NAME"; then
+    pushd "$WT_PATH" || exit 1
+  else
+    echo "Error: Failed to create worktree."
+    exit 1
+  fi
+fi
+
+# 3. Open a interactive shell so the user stays inside the directory
+exec $SHELL
