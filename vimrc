@@ -193,7 +193,7 @@ let g:syntastic_ruby_rubocop_args = '--display-cop-names --display-style-guide'
 let g:syntastic_eruby_ruby_quiet_messages = { 'regex': 'possibly useless use of a variable in void context' }
 
 " Go
-let go_tags = ['acceptance', 'benchmark', 'client_test', 'functional', 'functional_benchmark', 'integration']
+let go_tags = ['acceptance', 'benchmark', 'client_test', 'functional', 'functional_benchmark', 'functional_test', 'godog', 'integration']
 " Turn on gopls
 let g:go_gopls_options = ['-remote=auto']
 " Disable the 'composites' analyzer (likely tied to 'efaceany')
