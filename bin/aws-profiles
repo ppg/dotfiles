@@ -1,18 +1,43 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-set -euo pipefail
-
-PROFILES=("${@}")
-if [[ "${#PROFILES[@]}" -eq 0 ]]; then
-  mapfile -t PROFILES < <(aws configure list-profiles)
+# Check if jq is installed
+if ! command -v jq &> /dev/null; then
+  echo "Error: 'jq' is not installed. Please install it (e.g., brew install jq) to run this script."
+  exit 1
 fi
 
-echo "Checking profiles... (count: ${#PROFILES[@]})"
-for PROFILE in "${PROFILES[@]}"; do
-  printf "%20s..." "$PROFILE"
-  if aws sts get-caller-identity --profile "$PROFILE" &> /dev/null; then
-    echo "VALID"
+# Determine which profiles to check
+if [ $# -gt 0 ]; then
+  profiles=("$@")
+  echo "Checking $# explicitly requested profile(s)..."
+else
+  profiles=($(aws configure list-profiles))
+  echo "No profiles specified. Checking all ${#profiles[@]} configured profiles..."
+fi
+
+echo "------------------------------------------------------------------------"
+printf "%-12s %-20s %-15s %-10s\n" "STATUS" "PROFILE" "ACCOUNT" "REGION"
+echo "------------------------------------------------------------------------"
+
+for profile in "${profiles[@]}"; do
+  # Verify profile exists in config before trying to call AWS
+  if ! aws configure get region --profile "$profile" &>/dev/null && [ $? -ne 0 ]; then
+    printf "⚠️  [MISSING]  %-20s %-15s %-10s\n" "$profile" "N/A" "N/A"
+    continue
+  fi
+
+  # Get the local region
+  region=$(aws configure get region --profile "$profile" || echo "N/A")
+
+  # Attempt to get identity
+  identity=$(aws sts get-caller-identity --profile "$profile" 2>/dev/null)
+
+  if [ $? -eq 0 ]; then
+    account=$(echo "$identity" | jq -r '.Account')
+    printf "✅ [ACTIVE]   %-20s %-15s %-10s\n" "$profile" "$account" "$region"
   else
-    echo "INVALID"
+    printf "❌ [EXPIRED]  %-20s %-15s %-10s\n" "$profile" "Unknown" "$region"
   fi
 done
+
+echo "------------------------------------------------------------------------"
