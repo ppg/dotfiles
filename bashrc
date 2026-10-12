@@ -128,13 +128,16 @@ if [[ -n "$PS1" ]] ; then
   # ~/.bash_aliases, instead of adding them here directly.
   # See /usr/share/doc/bash-doc/examples in the bash-doc package.
   if [ -f ~/.bash_aliases ]; then
-      . ~/.bash_aliases
+    . ~/.bash_aliases
   fi
 
-  # Restore default behavior for Gnome >= 3.8
-  # script may not exist, that's why we test
-  # shellcheck disable=SC1091
-  if [ -f /etc/profile.d/vte.sh ]; then . /etc/profile.d/vte.sh; fi
+  # Restore default behavior for GNOME / VTE folder tracking
+  # Checks for the newer vte-2.91.sh first, then falls back to the older vte.sh
+  if [ -f /etc/profile.d/vte-2.91.sh ]; then
+    . /etc/profile.d/vte-2.91.sh
+  elif [ -f /etc/profile.d/vte.sh ]; then
+    . /etc/profile.d/vte.sh
+  fi
 
   # NOTE: bash completion must be before things like the git prompt setup
 
@@ -262,7 +265,7 @@ if [[ -n "$PS1" ]] ; then
     PS1_RUBY=" (ruby:\$(~/.rvm/bin/rvm-prompt))"
   elif [ -f /usr/local/rvm/bin/rvm-prompt ]; then
     PS1_RUBY=" (ruby:\$(/usr/local/rvm/bin/rvm-prompt))"
-  elif command rbenv >/dev/null 2>&1; then
+  elif command -v rbenv >/dev/null 2>&1; then
     PS1_RUBY=" (ruby:\$(rbenv version-name))"
   else
     PS1_RUBY=""
