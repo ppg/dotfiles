@@ -6,19 +6,36 @@ alias mocha="npx mocha"
 alias grunt="npx grunt"
 
 # GREP aliases
+grep_common_args=(
+  --color=auto
+  --exclude-dir=.cache
+  --exclude-dir=.devspace
+  --exclude-dir=.git
+  --exclude-dir=node_modules
+  --exclude-dir=worktrees
+  --extended-regexp
+)
 if command -v ggrep >/dev/null 2>&1; then
-  alias grep="ggrep --color=auto --exclude-dir=.cache --exclude-dir=.devspace --exclude-dir=.git --exclude-dir=node_modules --extended-regexp"
-  alias grip="ggrep -i --color=auto --exclude-dir=.cache --exclude-dir=.devspace --exclude-dir=.git --exclude-dir=node_modules --extended-regexp"
+  # shellcheck disable=SC2139
+  alias grep="ggrep ${grep_common_args[*]}"
+  # shellcheck disable=SC2139
+  alias grip="ggrep -i ${grep_common_args[*]}"
 else
-  alias grep="grep --color=auto --exclude-dir=.cache --exclude-dir=.devspace --exclude-dir=.git --exclude-dir=node_modules --extended-regexp"
-  alias grip="grep -i --color=auto --exclude-dir=.cache --exclude-dir=.devspace --exclude-dir=.git --exclude-dir=node_modules --extended-regexp"
+  # shellcheck disable=SC2139
+  alias grep="grep ${grep_common_args[*]}"
+  # shellcheck disable=SC2139
+  alias grip="grep -i ${grep_common_args[*]}"
 fi
 if command -v rgrep >/dev/null 2>&1; then
-  alias rgrep="rgrep -n --color=auto --exclude-dir=.cache --exclude-dir=.devspace --exclude-dir=.git --exclude-dir=node_modules --extended-regexp"
-  alias rgrip="rgrep -ni --color=auto --exclude-dir=.cache --exclude-dir=.devspace --exclude-dir=.git --exclude-dir=node_modules --extended-regexp"
+  # shellcheck disable=SC2139
+  alias rgrep="rgrep -n ${grep_common_args[*]}"
+  # shellcheck disable=SC2139
+  alias rgrip="rgrep -ni ${grep_common_args[*]}"
 else
-  alias rgrep="ggrep -nr --color=auto --exclude-dir=.cache --exclude-dir=.devspace --exclude-dir=.git --exclude-dir=node_modules --extended-regexp"
-  alias rgrip="ggrep -nir --color=auto --exclude-dir=.cache --exclude-dir=.devspace --exclude-dir=.git --exclude-dir=node_modules --extended-regexp"
+  # shellcheck disable=SC2139
+  alias rgrep="ggrep -nr ${grep_common_args[*]}"
+  # shellcheck disable=SC2139
+  alias rgrip="ggrep -nri ${grep_common_args[*]}"
 fi
 
 # sudo apt-get install python-pygments python3-pygments
